@@ -4,16 +4,18 @@ A Chrome extension for injecting custom JavaScript into web pages with script ma
 
 ## Features
 
-### ✨ Two Modes of Operation
+### ✨ Two Interfaces
 
-1. **Manual Injection Tab**: Quickly write and inject JavaScript into the current page
-2. **Saved Scripts Tab**: Manage a library of reusable scripts with automatic URL matching
+1. **Popup (Quick Actions)**: Click the extension icon for quick script injection and stats
+2. **Management Page (Full CRUD)**: Separate full-page interface for creating, editing, and managing all your scripts
 
 ### 🔧 CRUD Operations
 
+All script management is done on a **separate dedicated page** with a beautiful full-page interface:
+
 - **Create**: Add new scripts with custom names, code, and URL patterns
-- **Read**: View all saved scripts in an organized list
-- **Update**: Edit existing scripts
+- **Read**: View all saved scripts in a beautiful grid layout with search
+- **Update**: Edit existing scripts with a full-screen modal
 - **Delete**: Remove scripts you no longer need
 
 ### 🎯 Automatic URL Pattern Matching
@@ -39,22 +41,42 @@ Scripts that match the current URL are highlighted with a green "AUTO-INJECTED" 
 3. Click "Load unpacked"
 4. Select the `src` folder of this extension
 
-### Creating an Auto-Injecting Script
+### Quick Injection (Popup)
+
+1. Click the extension icon in your toolbar
+2. Type or paste JavaScript code in the text area
+3. Click "▶ Inject Script Now"
+4. The popup shows stats:
+   - Total Scripts saved
+   - Auto-Inject scripts active on current page
+
+### Managing Scripts (Full Page)
 
 1. Click the extension icon
-2. Go to the "Saved Scripts" tab
-3. Click "+ New Script"
-4. Fill in:
+2. Click "⚙️ Manage All Scripts" button
+3. This opens a **full-page interface** where you can:
+   - See all your scripts in a beautiful grid layout
+   - Search scripts by name or URL pattern
+   - View statistics (total scripts, auto-inject count, matched on current page)
+   - Create, edit, or delete scripts
+
+**Or right-click the extension icon → "Options"**
+
+### Creating a Script
+
+1. Open the Management Page
+2. Click "➕ New Script"
+3. Fill in:
    - **Script Name**: A descriptive name for your script
    - **URL Pattern**: Regex pattern to match URLs (scripts with patterns will auto-inject!)
-   - **JavaScript Code**: Your JavaScript code
-5. Click "Save"
+   - **JavaScript Code**: Your JavaScript code (large textarea with syntax highlighting)
+4. Click "💾 Save Script"
 
 ### Running Scripts
 
 - **Automatic**: Scripts with URL patterns inject automatically when you visit matching pages
-- **Manual**: Switch to "Saved Scripts" tab and click the "▶ Run" button on any script
-- **From Manual Tab**: Write code directly and click "Inject Script"
+- **Manual from Management Page**: Click the "▶ Run" button on any script card
+- **Quick Injection from Popup**: Use the popup for one-off code injections
 
 ### Example Scripts
 
@@ -76,6 +98,22 @@ Scripts that match the current URL are highlighted with a green "AUTO-INJECTED" 
 - Code: `console.log('Watching:', document.title);`
 - ✅ Runs automatically on every YouTube video page!
 
+## Interface Overview
+
+### Popup (Extension Icon)
+- **Quick Injection**: Textarea for fast code injection
+- **Stats Dashboard**: See total scripts and active auto-injections
+- **Current Page**: Shows the URL of the active tab
+- **Manage Scripts Button**: Opens the full management page
+
+### Management Page (Options)
+- **Stats Cards**: Total scripts, auto-inject scripts, active on current page
+- **Search Bar**: Find scripts quickly by name or URL pattern
+- **Scripts Grid**: Beautiful card layout showing all your scripts
+  - Each card shows: name, URL pattern, code preview, and action buttons
+  - Matched scripts have a green border and "AUTO-INJECTED" badge
+- **Modal Editor**: Full-screen editor for creating/editing scripts with large textarea
+
 ## Permissions
 
 - `activeTab`: Access to the current tab
@@ -90,5 +128,6 @@ Scripts that match the current URL are highlighted with a green "AUTO-INJECTED" 
 - URL patterns use JavaScript regex syntax
 - Scripts execute in the main page context (not isolated)
 - **Scripts with URL patterns auto-inject on page load** - the first thing when a page loads!
-- Matched scripts are highlighted with a green badge in the popup
+- Matched scripts are highlighted with a green badge in both popup and management page
 - Check the browser console for injection logs
+- The management page is a full separate page, not a cramped popup!
