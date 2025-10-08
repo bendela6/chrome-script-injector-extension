@@ -82,7 +82,7 @@ async function loadStats() {
       currentPageDiv.style.display = 'block';
 
       // Count matched scripts
-      const matchedCount = scripts.filter(script => {
+      matchedScriptsEl.textContent = scripts.filter(script => {
         if (!script.urlPattern) return false;
         try {
           const regex = new RegExp(script.urlPattern);
@@ -91,8 +91,6 @@ async function loadStats() {
           return false;
         }
       }).length;
-
-      matchedScriptsEl.textContent = matchedCount;
     } else {
       matchedScriptsEl.textContent = 0;
     }
