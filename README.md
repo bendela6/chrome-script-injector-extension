@@ -1,6 +1,35 @@
 # Script Injector Chrome Extension
 
-A Chrome extension for injecting custom JavaScript into web pages with script management and **automatic URL pattern matching**.
+A Chrome extension for injecting custom JavaScript into web pages with script management and **automatic URL pattern matching**. Built with **React** and **TypeScript**.
+
+## 🛠️ Tech Stack
+
+- **React 18** - Modern UI framework
+- **TypeScript** - Type-safe development
+- **Vite** - Fast build tool
+- **Chrome Extension Manifest V3** - Latest extension API
+
+## 📁 Project Structure
+
+```
+chrome-extension/
+├── src/
+│   ├── Popup.tsx          # Popup React component
+│   ├── Options.tsx        # Options page React component
+│   ├── Options.css        # Styles for options page
+│   ├── popup-main.tsx     # Popup entry point
+│   ├── options-main.tsx   # Options entry point
+│   ├── background.ts      # Background service worker
+│   ├── types.ts           # TypeScript type definitions
+│   ├── manifest.json      # Extension manifest
+│   ├── icon.png          # Extension icon
+│   ├── popup.html        # Popup HTML shell
+│   └── options.html      # Options HTML shell
+├── dist/                 # Built extension (load this in Chrome)
+├── vite.config.ts       # Vite configuration
+├── tsconfig.json        # TypeScript configuration
+└── package.json         # Dependencies and scripts
+```
 
 ## Features
 
@@ -32,14 +61,50 @@ Each script can have a regex pattern to match specific URLs:
 
 Scripts that match the current URL are highlighted with a green "AUTO-INJECTED" badge.
 
-## How to Use
+## 🚀 Development
+
+### Prerequisites
+
+- Node.js 16+ and npm
+- Chrome browser
 
 ### Installation
+
+1. Clone or download this repository
+2. Install dependencies:
+```bash
+npm install
+```
+
+### Build the Extension
+
+```bash
+npm run build
+```
+
+This will:
+- Compile TypeScript
+- Bundle React components with Vite
+- Generate optimized production files in the `dist/` folder
+
+### Load in Chrome
 
 1. Open Chrome and go to `chrome://extensions/`
 2. Enable "Developer mode" (toggle in top-right)
 3. Click "Load unpacked"
-4. Select the `src` folder of this extension
+4. Select the `dist` folder from this project
+
+### Development Mode
+
+For development with hot reload:
+
+```bash
+npm run dev
+```
+
+Then load the extension from the `dist` folder. You'll need to reload the extension manually in Chrome after changes.
+
+## 📝 Usage
 
 ### Quick Injection (Popup)
 
@@ -69,7 +134,7 @@ Scripts that match the current URL are highlighted with a green "AUTO-INJECTED" 
 3. Fill in:
    - **Script Name**: A descriptive name for your script
    - **URL Pattern**: Regex pattern to match URLs (scripts with patterns will auto-inject!)
-   - **JavaScript Code**: Your JavaScript code (large textarea with syntax highlighting)
+   - **JavaScript Code**: Your JavaScript code (large textarea)
 4. Click "💾 Save Script"
 
 ### Running Scripts
@@ -98,21 +163,41 @@ Scripts that match the current URL are highlighted with a green "AUTO-INJECTED" 
 - Code: `console.log('Watching:', document.title);`
 - ✅ Runs automatically on every YouTube video page!
 
-## Interface Overview
+## 🔧 Modifying the Extension
 
-### Popup (Extension Icon)
-- **Quick Injection**: Textarea for fast code injection
-- **Stats Dashboard**: See total scripts and active auto-injections
-- **Current Page**: Shows the URL of the active tab
-- **Manage Scripts Button**: Opens the full management page
+### Adding New Features to Popup
 
-### Management Page (Options)
-- **Stats Cards**: Total scripts, auto-inject scripts, active on current page
-- **Search Bar**: Find scripts quickly by name or URL pattern
-- **Scripts Grid**: Beautiful card layout showing all your scripts
-  - Each card shows: name, URL pattern, code preview, and action buttons
-  - Matched scripts have a green border and "AUTO-INJECTED" badge
-- **Modal Editor**: Full-screen editor for creating/editing scripts with large textarea
+Edit `src/Popup.tsx` - it's a React component with TypeScript.
+
+### Adding New Features to Options Page
+
+Edit `src/Options.tsx` and `src/Options.css`.
+
+### Modifying Background Logic
+
+Edit `src/background.ts` - handles automatic script injection on page load.
+
+### Type Definitions
+
+All TypeScript types are defined in `src/types.ts`.
+
+After making changes, run:
+```bash
+npm run build
+```
+
+Then reload the extension in Chrome.
+
+## 📦 Building for Production
+
+```bash
+npm run build
+```
+
+The built extension will be in the `dist/` folder. You can:
+- Zip the `dist` folder to distribute
+- Submit to Chrome Web Store
+- Share with others to load as an unpacked extension
 
 ## Permissions
 
@@ -131,3 +216,20 @@ Scripts that match the current URL are highlighted with a green "AUTO-INJECTED" 
 - Matched scripts are highlighted with a green badge in both popup and management page
 - Check the browser console for injection logs
 - The management page is a full separate page, not a cramped popup!
+
+## 🐛 Troubleshooting
+
+**Extension not loading?**
+- Make sure you built the project: `npm run build`
+- Load the `dist` folder, not the root folder
+- Check Chrome DevTools console for errors
+
+**Changes not showing?**
+- Rebuild: `npm run build`
+- Reload the extension in `chrome://extensions/`
+- Close and reopen the popup/options page
+
+**TypeScript errors?**
+- Run `npm run build` to see compilation errors
+- Check `tsconfig.json` settings
+- Ensure all type definitions are correct

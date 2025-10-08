@@ -3,11 +3,13 @@
  * Automatically injects scripts when pages load and match URL patterns
  */
 
+import { Script } from './types';
+
 /**
  * Injected function to be executed in the context of the target page.
  * @param {string} code - The JavaScript code to inject.
  */
-function injectScript(code) {
+function injectScript(code: string) {
   try {
     const script = document.createElement('script');
     script.textContent = `(function() { ${code} })();`;
@@ -21,7 +23,7 @@ function injectScript(code) {
 /**
  * Load all scripts from storage
  */
-async function loadScripts() {
+async function loadScripts(): Promise<Script[]> {
   const result = await chrome.storage.sync.get(['scripts']);
   return result.scripts || [];
 }
@@ -29,7 +31,7 @@ async function loadScripts() {
 /**
  * Check if a URL matches any script patterns and inject them
  */
-async function checkAndInjectScripts(tabId, url) {
+async function checkAndInjectScripts(tabId: number, url: string) {
   if (!url || url.startsWith('chrome://') || url.startsWith('chrome-extension://')) {
     return; // Skip chrome internal pages
   }
@@ -37,7 +39,7 @@ async function checkAndInjectScripts(tabId, url) {
   const scripts = await loadScripts();
 
   // Filter scripts that match the current URL
-  const matchingScripts = scripts.filter(script => {
+  const matchingScripts = scripts.filter((script: Script) => {
     if (!script.urlPattern) return false; // Skip scripts without pattern
 
     try {
@@ -94,4 +96,3 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 });
 
 console.log('🚀 Script Injector background service worker started');
-
