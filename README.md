@@ -1,6 +1,6 @@
 # Script Injector Chrome Extension
 
-A Chrome extension for injecting custom JavaScript into web pages with script management and URL pattern matching.
+A Chrome extension for injecting custom JavaScript into web pages with script management and **automatic URL pattern matching**.
 
 ## Features
 
@@ -16,13 +16,19 @@ A Chrome extension for injecting custom JavaScript into web pages with script ma
 - **Update**: Edit existing scripts
 - **Delete**: Remove scripts you no longer need
 
-### 🎯 URL Pattern Matching
+### 🎯 Automatic URL Pattern Matching
+
+**Scripts with URL patterns automatically inject on page load!**
 
 Each script can have a regex pattern to match specific URLs:
-- `.*github\.com.*` - Matches any GitHub page
-- `https://example\.com/.*` - Matches all pages on example.com
-- `.*youtube\.com/watch.*` - Matches YouTube video pages
-- Leave empty to allow manual execution on any page
+- `.*github\.com.*` - Auto-injects on any GitHub page
+- `https://example\.com/.*` - Auto-injects on all pages on example.com
+- `.*youtube\.com/watch.*` - Auto-injects on YouTube video pages
+- Leave empty for manual execution only
+
+**When you visit a matching page, the script runs automatically on page load!**
+
+Scripts that match the current URL are highlighted with a green "AUTO-INJECTED" badge.
 
 ## How to Use
 
@@ -33,48 +39,56 @@ Each script can have a regex pattern to match specific URLs:
 3. Click "Load unpacked"
 4. Select the `src` folder of this extension
 
-### Creating a Script
+### Creating an Auto-Injecting Script
 
 1. Click the extension icon
 2. Go to the "Saved Scripts" tab
 3. Click "+ New Script"
 4. Fill in:
    - **Script Name**: A descriptive name for your script
-   - **URL Pattern**: Regex pattern to match URLs (optional)
+   - **URL Pattern**: Regex pattern to match URLs (scripts with patterns will auto-inject!)
    - **JavaScript Code**: Your JavaScript code
 5. Click "Save"
 
 ### Running Scripts
 
+- **Automatic**: Scripts with URL patterns inject automatically when you visit matching pages
 - **Manual**: Switch to "Saved Scripts" tab and click the "▶ Run" button on any script
 - **From Manual Tab**: Write code directly and click "Inject Script"
 
 ### Example Scripts
 
-**Alert on GitHub:**
+**Alert on GitHub (Auto-Injects):**
 - Name: `GitHub Alert`
 - Pattern: `.*github\.com.*`
 - Code: `alert('Welcome to GitHub!');`
+- ✅ Runs automatically on every GitHub page!
 
-**Change Background Color:**
+**Change Background Color (Manual Only):**
 - Name: `Red Background`
 - Pattern: (leave empty)
 - Code: `document.body.style.backgroundColor = 'red';`
+- Click "▶ Run" to execute
 
-**Log Page Title:**
-- Name: `Log Title`
-- Pattern: (leave empty)
-- Code: `console.log('Page title:', document.title);`
+**Console Log on YouTube Videos:**
+- Name: `YouTube Logger`
+- Pattern: `.*youtube\.com/watch.*`
+- Code: `console.log('Watching:', document.title);`
+- ✅ Runs automatically on every YouTube video page!
 
 ## Permissions
 
 - `activeTab`: Access to the current tab
 - `scripting`: Ability to inject scripts
 - `storage`: Save your scripts across sessions
+- `tabs`: Monitor page loads for auto-injection
+- `<all_urls>`: Auto-inject on matching pages
 
 ## Notes
 
-- Scripts are saved using Chrome's sync storage
+- Scripts are saved using Chrome's sync storage and sync across your Chrome browsers
 - URL patterns use JavaScript regex syntax
 - Scripts execute in the main page context (not isolated)
-
+- **Scripts with URL patterns auto-inject on page load** - the first thing when a page loads!
+- Matched scripts are highlighted with a green badge in the popup
+- Check the browser console for injection logs

@@ -167,10 +167,11 @@ scriptModal.addEventListener('click', (e) => {
 // READ & DISPLAY
 async function loadAndDisplayScripts() {
   await loadScripts();
-  renderScriptList();
+  const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
+  renderScriptList(tab?.url);
 }
 
-function renderScriptList() {
+function renderScriptList(currentUrl = '') {
   if (scripts.length === 0) {
     scriptList.innerHTML = `
       <div class="empty-state">
@@ -180,19 +181,35 @@ function renderScriptList() {
     return;
   }
 
-  scriptList.innerHTML = scripts.map(script => `
-    <div class="script-item" data-id="${script.id}">
-      <div class="script-item-header">
-        <div class="script-name">${escapeHtml(script.name)}</div>
+  scriptList.innerHTML = scripts.map(script => {
+    // Check if this script matches the current URL
+    let isMatched = false;
+    if (currentUrl && script.urlPattern) {
+      try {
+        const regex = new RegExp(script.urlPattern);
+        isMatched = regex.test(currentUrl);
+      } catch (e) {
+        // Invalid regex
+      }
+    }
+
+    return `
+      <div class="script-item ${isMatched ? 'matched' : ''}" data-id="${script.id}">
+        <div class="script-item-header">
+          <div class="script-name">
+            ${escapeHtml(script.name)}
+            ${isMatched ? '<span class="match-badge">AUTO-INJECTED</span>' : ''}
+          </div>
+        </div>
+        ${script.urlPattern ? `<div class="script-url">Pattern: ${escapeHtml(script.urlPattern)}</div>` : '<div class="script-url">No URL pattern (manual only)</div>'}
+        <div class="script-actions">
+          <button class="btn btn-small btn-run" data-action="run" data-id="${script.id}">▶ Run</button>
+          <button class="btn btn-small btn-edit" data-action="edit" data-id="${script.id}">✏ Edit</button>
+          <button class="btn btn-small btn-delete" data-action="delete" data-id="${script.id}">🗑 Delete</button>
+        </div>
       </div>
-      ${script.urlPattern ? `<div class="script-url">Pattern: ${escapeHtml(script.urlPattern)}</div>` : '<div class="script-url">No URL pattern (matches all)</div>'}
-      <div class="script-actions">
-        <button class="btn btn-small btn-run" data-action="run" data-id="${script.id}">▶ Run</button>
-        <button class="btn btn-small btn-edit" data-action="edit" data-id="${script.id}">✏ Edit</button>
-        <button class="btn btn-small btn-delete" data-action="delete" data-id="${script.id}">🗑 Delete</button>
-      </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 
   // Attach event listeners
   scriptList.querySelectorAll('button[data-action]').forEach(btn => {
