@@ -1,11 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>My Extension Popup</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Script Injector</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+      /* Set a fixed size for the popup window */
+      body {
+          width: 350px;
+          height: 300px;
+          font-family: 'Inter', sans-serif;
+      }
+  </style>
 </head>
-<body style="width: 200px">
-<h1>Custom Script Injector</h1>
-<button id="injectButton">Inject Script</button>
-</body>
+<body class="bg-slate-50 flex flex-col p-4">
+<h1 class="text-xl font-bold text-slate-800 mb-3">Script Injector</h1>
+
+<!-- Text area for user to input their script -->
+<textarea
+        id="script-area"
+        class="w-full flex-grow p-3 bg-white border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none shadow-sm"
+        placeholder="Enter your JavaScript code here...&#10;For example: alert('Hello from the extension!');"></textarea>
+
+<!-- Button to trigger the script injection -->
+<button
+        id="inject-btn"
+        class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-transform transform active:scale-95 shadow-md">
+  Inject Script
+</button>
+
+<!-- Link to the popup's JavaScript file -->
 <script src="popup.js"></script>
+</body>
 </html>

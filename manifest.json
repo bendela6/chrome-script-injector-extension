@@ -1,45 +1,23 @@
 {
   "manifest_version": 3,
-  "name": "My Custom Script Injector",
-  "description": "Injects a custom script into web pages.",
+  "name": "Script Injector",
   "version": "1.0",
+  "description": "Injects custom JavaScript into the current active tab.",
   "permissions": [
-    "storage",
     "activeTab",
     "scripting"
   ],
-  "icons": {
-    "32": "icon.png",
-    "64": "icon.png"
-  },
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    }
   },
-  "host_permissions": [
-    "*"
-  ],
-  "content_scripts": [
-    {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "content.js"
-      ]
-    }
-  ],
-  "web_accessible_resources": [
-    {
-      "matches": [
-        "<all_urls>"
-      ],
-      "resources": [
-        "script.js"
-      ]
-    }
-  ],
-  "content_security_policy": {
-    "extension_pages": "script-src 'self' 'wasm-unsafe-eval';"
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
   }
 }
-
