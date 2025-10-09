@@ -15,7 +15,9 @@ export default defineConfig({
         }
         // Copy manifest and icon
         copyFileSync(resolve(__dirname, 'src/manifest.json'), resolve(dist, 'manifest.json'));
-        copyFileSync(resolve(__dirname, 'src/icon.png'), resolve(dist, 'icon.png'));
+        copyFileSync(resolve(__dirname, 'src/assets/icon16.png'), resolve(dist, 'icon16.png'));
+        copyFileSync(resolve(__dirname, 'src/assets/icon48.png'), resolve(dist, 'icon48.png'));
+        copyFileSync(resolve(__dirname, 'src/assets/icon128.png'), resolve(dist, 'icon128.png'));
       }
     }
   ],
