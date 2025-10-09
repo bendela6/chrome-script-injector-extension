@@ -86,52 +86,56 @@ const Popup: React.FC = () => {
   };
 
   return (
-    <div style={{ width: '400px', minHeight: '300px', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif', backgroundColor: '#f8fafc', margin: 0, padding: 0 }}>
-      <div style={{ background: 'linear-gradient(135deg, #2563eb 0%, #764ba2 100%)', color: 'white', padding: '1.5rem', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-        <h1 style={{ fontSize: '1.25rem', fontWeight: 700, margin: '0 0 0.5rem 0' }}>🚀 Script Injector</h1>
-        <p style={{ fontSize: '0.875rem', opacity: 0.9, margin: 0 }}>Quick injection & script management</p>
+    <div className="w-[400px] min-h-[300px] font-sans bg-slate-50 m-0 p-0">
+      <div className="bg-gradient-to-br from-blue-600 to-purple-600 text-white p-6 shadow-lg">
+        <h1 className="text-xl font-bold mb-2">🚀 Script Injector</h1>
+        <p className="text-sm opacity-90">Quick injection & script management</p>
       </div>
 
-      <div style={{ padding: '1.5rem' }}>
+      <div className="p-6">
         {currentUrl && (
-          <div style={{ background: '#e0f2fe', border: '1px solid #bae6fd', borderRadius: '0.5rem', padding: '0.75rem', marginBottom: '1rem', fontSize: '0.75rem', color: '#0c4a6e' }}>
-            <div style={{ fontWeight: 600, marginBottom: '0.25rem' }}>📍 Current Page:</div>
-            <div style={{ wordBreak: 'break-all', opacity: 0.8 }}>{currentUrl}</div>
+          <div className="bg-sky-100 border border-sky-300 rounded-lg p-3 mb-4 text-xs text-sky-900">
+            <div className="font-semibold mb-1">📍 Current Page:</div>
+            <div className="break-all opacity-80">{currentUrl}</div>
           </div>
         )}
 
-        <div style={{ background: 'white', border: '2px solid #e2e8f0', borderRadius: '0.5rem', padding: '1rem', marginBottom: '1rem' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderBottom: '1px solid #f1f5f9' }}>
-            <span style={{ fontSize: '0.875rem', color: '#64748b' }}>Total Scripts</span>
-            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#667eea' }}>{totalScripts}</span>
+        <div className="bg-white border-2 border-slate-200 rounded-lg p-4 mb-4">
+          <div className="flex justify-between items-center py-2 border-b border-slate-100">
+            <span className="text-sm text-slate-500">Total Scripts</span>
+            <span className="text-xl font-bold text-indigo-500">{totalScripts}</span>
           </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0' }}>
-            <span style={{ fontSize: '0.875rem', color: '#64748b' }}>Auto-Inject Active</span>
-            <span style={{ fontSize: '1.25rem', fontWeight: 700, color: '#667eea' }}>{matchedScripts}</span>
+          <div className="flex justify-between items-center py-2">
+            <span className="text-sm text-slate-500">Auto-Inject Active</span>
+            <span className="text-xl font-bold text-indigo-500">{matchedScripts}</span>
           </div>
         </div>
 
-        <div style={{ marginBottom: '1.5rem' }}>
-          <div style={{ fontSize: '0.875rem', fontWeight: 600, color: '#475569', marginBottom: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Quick Injection</div>
+        <div className="mb-6">
+          <div className="text-sm font-semibold text-slate-600 mb-3 uppercase tracking-wide">Quick Injection</div>
           <textarea
             value={scriptText}
             onChange={(e) => setScriptText(e.target.value)}
-            style={{ width: '100%', height: '120px', padding: '0.75rem', backgroundColor: '#ffffff', border: '2px solid #e2e8f0', borderRadius: '0.5rem', resize: 'vertical', boxSizing: 'border-box', fontFamily: 'Consolas, Monaco, monospace', fontSize: '0.875rem', transition: 'all 0.2s' }}
+            className="w-full h-[120px] p-3 bg-white border-2 border-slate-200 rounded-lg resize-y box-border font-mono text-sm transition-all focus:border-indigo-500 focus:outline-none"
             placeholder="Enter JavaScript code to inject...&#10;&#10;Example:&#10;alert('Hello World!');"
           />
           <button
             onClick={handleInject}
-            style={{ width: '100%', padding: '0.75rem 1rem', border: 'none', borderRadius: '0.5rem', cursor: 'pointer', fontWeight: 600, fontSize: '0.875rem', background: injecting ? 'linear-gradient(135deg, #10b981 0%, #059669 100%)' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', color: 'white', boxShadow: '0 2px 8px rgba(102, 126, 234, 0.3)', marginTop: '0.75rem', transition: 'all 0.2s' }}
+            className={`w-full px-4 py-3 border-none rounded-lg cursor-pointer font-semibold text-sm text-white shadow-lg mt-3 transition-all hover:shadow-xl ${
+              injecting 
+                ? 'bg-gradient-to-br from-green-500 to-green-600' 
+                : 'bg-gradient-to-br from-indigo-500 to-purple-600 hover:from-indigo-600 hover:to-purple-700'
+            }`}
           >
             {injecting ? '✓ Injected Successfully!' : '▶ Inject Script Now'}
           </button>
         </div>
 
-        <div style={{ height: '1px', background: '#e2e8f0', margin: '1.5rem 0' }} />
+        <div className="h-px bg-slate-200 my-6" />
 
         <button
           onClick={openManagePage}
-          style={{ width: '100%', padding: '0.75rem 1rem', border: '2px solid #e2e8f0', borderRadius: '0.5rem', cursor: 'pointer', fontWeight: 600, fontSize: '0.875rem', background: 'white', color: '#475569', transition: 'all 0.2s' }}
+          className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg cursor-pointer font-semibold text-sm bg-white text-slate-600 transition-all hover:bg-slate-50 hover:border-slate-300"
         >
           ⚙️ Manage All Scripts
         </button>
@@ -141,4 +145,3 @@ const Popup: React.FC = () => {
 };
 
 export default Popup;
-
