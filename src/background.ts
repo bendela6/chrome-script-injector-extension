@@ -41,6 +41,7 @@ async function checkAndInjectScripts(tabId: number, url: string) {
   // Filter scripts that match the current URL
   const matchingScripts = scripts.filter((script: Script) => {
     if (!script.urlPattern) return false; // Skip scripts without pattern
+    if (script.enabled === false) return false; // Skip disabled scripts
 
     try {
       const regex = new RegExp(script.urlPattern);
