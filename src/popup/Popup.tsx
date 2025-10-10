@@ -48,20 +48,6 @@ export function Popup() {
           ⚙️ Manage All Scripts
         </Button>
 
-        {tab?.url && (
-          <div className="bg-sky-100 border border-sky-300 rounded-lg p-3 mb-4 text-xs text-sky-900">
-            <div className="font-semibold mb-1">📍 Current Page:</div>
-            <div className="break-all opacity-80">{tab?.url}</div>
-          </div>
-        )}
-
-        <div className="bg-white border-2 border-slate-200 rounded-lg p-4 mb-4">
-          <div className="flex justify-between items-center">
-            <span className="text-sm text-slate-500">Active Scripts on This Page</span>
-            <span className="text-xl font-bold text-indigo-500">{activeScripts.length}</span>
-          </div>
-        </div>
-
         {activeScripts.length === 0 ? (
           <div className="text-center py-8 text-slate-500">
             <p className="text-sm mb-2">No scripts match this page</p>
@@ -70,7 +56,7 @@ export function Popup() {
         ) : (
           <div className="space-y-3">
             <h2 className="text-sm font-semibold text-slate-700 mb-2">
-              Matched Scripts ({scripts.length})
+              Matched Scripts ({activeScripts.length})
             </h2>
             {activeScripts.map((script) => (
               <div
