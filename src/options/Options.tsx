@@ -14,7 +14,7 @@ export function Options() {
   const [scripts, setScripts] = useState<ScriptDto[]>([]);
   const [editingScriptId, setEditingScriptId] = useState<string>();
   const [searchQuery, setSearchQuery] = useState("");
-  const [showModal, setShowModal] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState<ScriptFormData>(initialFormData);
 
   useEffect(() => startScriptsStorageListener(), []);
@@ -31,13 +31,13 @@ export function Options() {
   const handleScriptCreate = () => {
     setEditingScriptId(undefined);
     setFormData(initialFormData);
-    setShowModal(true);
+    setShowForm(true);
   };
 
   const handleScriptEdit = (script: ScriptDto) => {
     setEditingScriptId(script.id);
     setFormData(script);
-    setShowModal(true);
+    setShowForm(true);
   };
 
   const handleScriptSave = async () => {
@@ -62,7 +62,7 @@ export function Options() {
     } else {
       void scriptsActions.createScript(formData);
     }
-    setShowModal(false);
+    setShowForm(false);
   };
 
   const handleScriptDelete = async (script: ScriptDto) => {
@@ -71,6 +71,20 @@ export function Options() {
     }
   };
 
+  // Show form page
+  if (showForm) {
+    return (
+      <ScriptForm
+        isEditing={editingScriptId !== undefined}
+        formData={formData}
+        onFormChange={setFormData}
+        onSave={handleScriptSave}
+        onCancel={() => setShowForm(false)}
+      />
+    );
+  }
+
+  // Show scripts list page
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <PageHeader />
@@ -97,15 +111,6 @@ export function Options() {
           </div>
         )}
       </div>
-
-      <ScriptForm
-        isOpen={showModal}
-        isEditing={editingScriptId !== null}
-        formData={formData}
-        onFormChange={setFormData}
-        onSave={handleScriptSave}
-        onClose={() => setShowModal(false)}
-      />
     </div>
   );
 }
