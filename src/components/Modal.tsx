@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface ModalProps {
   isOpen: boolean;
@@ -26,4 +26,3 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
     </div>
   );
 };
-

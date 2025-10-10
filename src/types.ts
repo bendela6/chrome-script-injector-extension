@@ -6,11 +6,11 @@ export type ScriptDto = {
   enabled: boolean;
   createdAt: string;
   updatedAt: string;
-}
+};
 
 export type ScriptFormData = Omit<ScriptDto, "id" | "createdAt" | "updatedAt">;
 
 export type TabDto = {
   id: number;
   url: string;
-}
+};

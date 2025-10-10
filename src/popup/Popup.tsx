@@ -6,7 +6,7 @@ import {
   scriptsStore,
   startScriptsStorageListener,
   startTabListener,
-  tabStore
+  tabStore,
 } from "../utils";
 import classNames from "classnames";
 import { ScriptDto, TabDto } from "../types";
@@ -20,7 +20,10 @@ export function Popup() {
   useEffect(() => tabStore.subscribe(setTab), []);
   useEffect(() => scriptsStore.subscribe(setScripts), []);
 
-  const activeScripts = useMemo(() => scripts.filter((script) => tab && isScriptUrlMatched(script, tab?.url)), [scripts, tab]);
+  const activeScripts = useMemo(
+    () => scripts.filter((script) => tab && isScriptUrlMatched(script, tab?.url)),
+    [scripts, tab]
+  );
 
   const toggleScript = async (scriptId: string) => {
     await scriptsActions.updateScript(scriptId, (script) => {
@@ -28,7 +31,6 @@ export function Popup() {
       return script;
     });
   };
-
 
   const openManagePage = () => {
     chrome.runtime.openOptionsPage();
@@ -70,46 +72,46 @@ export function Popup() {
             <h2 className="text-sm font-semibold text-slate-700 mb-2">
               Matched Scripts ({scripts.length})
             </h2>
-            {activeScripts.map((script) =>
-              (
-                <div
-                  key={script.id}
-                  className={classNames("bg-white border rounded-lg p-3 shadow-sm",
-                    script.enabled ? "border-green-400 bg-green-50" : "border-slate-200"
-                  )}
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="text-sm font-semibold text-slate-800 truncate">
-                          {script.name}
-                        </h3>
-                        <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
-                          Matches
-                        </span>
-                      </div>
-                      <p className="text-xs text-slate-500 truncate" title={script.urlPattern}>
-                        {script.urlPattern}
-                      </p>
+            {activeScripts.map((script) => (
+              <div
+                key={script.id}
+                className={classNames(
+                  "bg-white border rounded-lg p-3 shadow-sm",
+                  script.enabled ? "border-green-400 bg-green-50" : "border-slate-200"
+                )}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="text-sm font-semibold text-slate-800 truncate">
+                        {script.name}
+                      </h3>
+                      <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
+                        Matches
+                      </span>
                     </div>
-
-                    <button
-                      onClick={() => toggleScript(script.id)}
-                      className={`flex-shrink-0 relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
-                        script.enabled ? "bg-indigo-600" : "bg-slate-300"
-                      }`}
-                      role="switch"
-                      aria-checked={script.enabled}
-                    >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          script.enabled ? "translate-x-6" : "translate-x-1"
-                        }`}
-                      />
-                    </button>
+                    <p className="text-xs text-slate-500 truncate" title={script.urlPattern}>
+                      {script.urlPattern}
+                    </p>
                   </div>
+
+                  <button
+                    onClick={() => toggleScript(script.id)}
+                    className={`flex-shrink-0 relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
+                      script.enabled ? "bg-indigo-600" : "bg-slate-300"
+                    }`}
+                    role="switch"
+                    aria-checked={script.enabled}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        script.enabled ? "translate-x-6" : "translate-x-1"
+                      }`}
+                    />
+                  </button>
                 </div>
-              ))}
+              </div>
+            ))}
           </div>
         )}
       </div>

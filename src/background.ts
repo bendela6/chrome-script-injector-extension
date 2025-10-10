@@ -4,9 +4,8 @@ import {
   scriptsStore,
   startScriptsStorageListener,
   startTabListener,
-  tabStore
+  tabStore,
 } from "./utils";
-
 
 (async () => {
   startTabListener();
@@ -37,5 +36,3 @@ import {
 
   console.log("🚀 Script Injector background service worker started");
 })();
-
-

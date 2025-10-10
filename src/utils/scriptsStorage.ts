@@ -11,7 +11,10 @@ export function startScriptsStorageListener() {
     scriptsStore.setData(scripts);
   });
 
-  const changesListener = (changes: { [key: string]: chrome.storage.StorageChange }, areaName: string) => {
+  const changesListener = (
+    changes: { [key: string]: chrome.storage.StorageChange },
+    areaName: string
+  ) => {
     if (areaName === "sync" && changes[STORAGE_KEY]) {
       scriptsStore.setData(changes[STORAGE_KEY].newValue || []);
     }
@@ -23,11 +26,10 @@ export function startScriptsStorageListener() {
   };
 }
 
-
 export const scriptsActions = {
   async saveScripts(scripts: ScriptDto[]): Promise<void> {
     await chrome.storage.sync.set({
-      [STORAGE_KEY]: scripts
+      [STORAGE_KEY]: scripts,
     });
   },
 
@@ -37,7 +39,7 @@ export const scriptsActions = {
       ...payload,
       id: crypto.randomUUID(),
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
     scripts.push(newScript);
     await this.saveScripts(scripts);
@@ -48,18 +50,17 @@ export const scriptsActions = {
     fnOrPayload: Partial<ScriptFormData> | ((script: ScriptFormData) => ScriptFormData)
   ): Promise<void> {
     const scripts = scriptsStore.getData();
-    const index = scripts.findIndex(script => script.id === id);
+    const index = scripts.findIndex((script) => script.id === id);
     if (index !== -1) {
       const script = scripts[index];
-      const formData = typeof fnOrPayload === "function"
-        ? fnOrPayload(script)
-        : { ...script, ...fnOrPayload };
+      const formData =
+        typeof fnOrPayload === "function" ? fnOrPayload(script) : { ...script, ...fnOrPayload };
 
       scripts[index] = {
         ...formData,
         id: script.id,
         createdAt: script.createdAt,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       };
       await this.saveScripts(scripts);
     }
@@ -67,7 +68,7 @@ export const scriptsActions = {
 
   async deleteScript(id: string): Promise<void> {
     const scripts = scriptsStore.getData();
-    const updatedScripts = scripts.filter(script => script.id !== id);
+    const updatedScripts = scripts.filter((script) => script.id !== id);
     await this.saveScripts(updatedScripts);
-  }
+  },
 };

@@ -12,24 +12,18 @@ interface ScriptFormProps {
 }
 
 export const ScriptForm: React.FC<ScriptFormProps> = ({
-                                                        isOpen,
-                                                        isEditing,
-                                                        formData,
-                                                        onFormChange,
-                                                        onSave,
-                                                        onClose
-                                                      }) => {
+  isOpen,
+  isEditing,
+  formData,
+  onFormChange,
+  onSave,
+  onClose,
+}) => {
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      title={isEditing ? "Edit Script" : "New Script"}
-    >
+    <Modal isOpen={isOpen} onClose={onClose} title={isEditing ? "Edit Script" : "New Script"}>
       <div className="space-y-6">
         <div>
-          <label className="block text-sm font-semibold text-slate-700 mb-2">
-            Script Name *
-          </label>
+          <label className="block text-sm font-semibold text-slate-700 mb-2">Script Name *</label>
           <input
             type="text"
             className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:border-blue-500 focus:outline-none transition-all"
@@ -51,11 +45,12 @@ export const ScriptForm: React.FC<ScriptFormProps> = ({
             placeholder=".*github\.com.*"
           />
           <div className="mt-2 text-xs text-slate-600 bg-slate-50 p-3 rounded">
-            Use regex pattern to auto-inject on matching pages. Examples:<br/>
-            • <code className="bg-white px-1 py-0.5 rounded">.*github\.com.*</code> - Any GitHub page<br/>
-            • <code className="bg-white px-1 py-0.5 rounded">https://example\.com/.*</code> - All pages on
-            example.com<br/>
-            • Leave empty for manual execution only
+            Use regex pattern to auto-inject on matching pages. Examples:
+            <br />• <code className="bg-white px-1 py-0.5 rounded">.*github\.com.*</code> - Any
+            GitHub page
+            <br />• <code className="bg-white px-1 py-0.5 rounded">https://example\.com/.*</code> -
+            All pages on example.com
+            <br />• Leave empty for manual execution only
           </div>
         </div>
 
@@ -83,4 +78,3 @@ export const ScriptForm: React.FC<ScriptFormProps> = ({
     </Modal>
   );
 };
-

@@ -1,16 +1,16 @@
-import React from 'react';
+import React from "react";
 
 interface StatCardProps {
   value: number;
   label: string;
-  color?: 'blue' | 'purple' | 'green';
+  color?: "blue" | "purple" | "green";
 }
 
-export const StatCard: React.FC<StatCardProps> = ({ value, label, color = 'blue' }) => {
+export const StatCard: React.FC<StatCardProps> = ({ value, label, color = "blue" }) => {
   const colorClasses = {
-    blue: 'border-blue-500 text-blue-600',
-    purple: 'border-purple-500 text-purple-600',
-    green: 'border-green-500 text-green-600',
+    blue: "border-blue-500 text-blue-600",
+    purple: "border-purple-500 text-purple-600",
+    green: "border-green-500 text-green-600",
   };
 
   return (
@@ -20,4 +20,3 @@ export const StatCard: React.FC<StatCardProps> = ({ value, label, color = 'blue'
     </div>
   );
 };
-

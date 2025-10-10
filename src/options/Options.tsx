@@ -7,7 +7,7 @@ const initialFormData: ScriptFormData = {
   name: "",
   urlPattern: "",
   code: "",
-  enabled: true
+  enabled: true,
 };
 
 export function Options() {
@@ -20,12 +20,13 @@ export function Options() {
   useEffect(() => startScriptsStorageListener(), []);
   useEffect(() => scriptsStore.subscribe(setScripts), []);
 
-  const filteredScripts = scripts.filter(script => {
-      return !searchQuery ||
-        script.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        script.urlPattern.toLowerCase().includes(searchQuery.toLowerCase());
-    }
-  );
+  const filteredScripts = scripts.filter((script) => {
+    return (
+      !searchQuery ||
+      script.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      script.urlPattern.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  });
 
   const handleScriptCreate = () => {
     setEditingScriptId(undefined);
@@ -72,7 +73,7 @@ export function Options() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
-      <PageHeader/>
+      <PageHeader />
 
       <SearchBar
         searchQuery={searchQuery}
@@ -82,22 +83,17 @@ export function Options() {
 
       <div className="max-w-7xl mx-auto px-8 py-6">
         {filteredScripts.length === 0 ? (
-          <EmptyState
-            searchQuery={searchQuery}
-            onNewScript={handleScriptCreate}
-          />
+          <EmptyState searchQuery={searchQuery} onNewScript={handleScriptCreate} />
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {scripts.map(script => {
-              return (
-                <ScriptCard
-                  key={script.id}
-                  script={script}
-                  onEdit={handleScriptEdit}
-                  onDelete={handleScriptDelete}
-                />
-              );
-            })}
+            {scripts.map((script) => (
+              <ScriptCard
+                key={script.id}
+                script={script}
+                onEdit={handleScriptEdit}
+                onDelete={handleScriptDelete}
+              />
+            ))}
           </div>
         )}
       </div>

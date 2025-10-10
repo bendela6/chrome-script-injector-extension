@@ -14,6 +14,6 @@ export async function executeScriptInTab(tabId: number, code: string) {
     target: { tabId },
     func: injectScript,
     args: [code],
-    world: "MAIN"
+    world: "MAIN",
   });
 }

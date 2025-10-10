@@ -10,12 +10,12 @@ export class Store<T> {
     this.subscribers.push(callback);
     callback(this.data);
     return () => {
-      this.subscribers = this.subscribers.filter(sub => sub !== callback);
+      this.subscribers = this.subscribers.filter((sub) => sub !== callback);
     };
   }
 
   private notify(): void {
-    this.subscribers.forEach(callback => callback(this.data));
+    this.subscribers.forEach((callback) => callback(this.data));
   }
 
   getData(): T {
@@ -26,5 +26,4 @@ export class Store<T> {
     this.data = items;
     this.notify();
   }
-
 }

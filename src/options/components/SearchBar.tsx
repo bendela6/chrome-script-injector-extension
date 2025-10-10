@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface SearchBarProps {
   searchQuery: string;
@@ -6,7 +6,11 @@ interface SearchBarProps {
   onNewScript: () => void;
 }
 
-export const SearchBar: React.FC<SearchBarProps> = ({ searchQuery, onSearchChange, onNewScript }) => {
+export const SearchBar: React.FC<SearchBarProps> = ({
+  searchQuery,
+  onSearchChange,
+  onNewScript,
+}) => {
   return (
     <div className="max-w-7xl mx-auto px-8 py-4 flex flex-col md:flex-row gap-4 items-stretch md:items-center mt-6">
       <div className="flex-1 relative">
@@ -28,4 +32,3 @@ export const SearchBar: React.FC<SearchBarProps> = ({ searchQuery, onSearchChang
     </div>
   );
 };
-
