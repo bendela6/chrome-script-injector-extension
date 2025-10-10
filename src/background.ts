@@ -26,7 +26,7 @@ import {
         continue;
       }
       try {
-        await executeScriptInTab(tab.id, script.code);
+        await executeScriptInTab(tab.id, script);
         console.log(`✅ Auto-injected script: "${script.name}" on ${tab.url}`);
       } catch (error) {
         console.error(`Failed to inject script "${script.name}":`, error);

@@ -1,3 +1,5 @@
+import { ScriptDto } from "../types.ts";
+
 function injectScript(code: string) {
   try {
     const script = document.createElement("script");
@@ -9,11 +11,11 @@ function injectScript(code: string) {
   }
 }
 
-export async function executeScriptInTab(tabId: number, code: string) {
+export async function executeScriptInTab(tabId: number, script: ScriptDto) {
   await chrome.scripting.executeScript({
     target: { tabId },
     func: injectScript,
-    args: [code],
+    args: [script.code],
     world: "MAIN",
   });
 }
