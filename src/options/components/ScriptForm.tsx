@@ -1,4 +1,7 @@
 import React from "react";
+import CodeMirror from "@uiw/react-codemirror";
+import { javascript } from "@codemirror/lang-javascript";
+import { EditorView } from "@codemirror/view";
 import { Button } from "../../components";
 import { ScriptFormData } from "../../types.ts";
 
@@ -92,14 +95,28 @@ export const ScriptForm: React.FC<ScriptFormProps> = ({
               <label className="block text-sm font-semibold text-slate-700 mb-2">
                 JavaScript Code *
               </label>
-              <textarea
-                ref={textareaRef}
-                className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:border-blue-500 focus:outline-none transition-all font-mono text-sm resize-none overflow-hidden"
-                value={formData.code}
-                onChange={(e) => onFormChange({ ...formData, code: e.target.value })}
-                placeholder="console.log('Hello World!');\n\n// Your JavaScript code here..."
-                rows={20}
-              />
+              <div className="rounded-lg border-2 border-slate-200 focus-within:border-blue-500 transition-all overflow-hidden">
+                <CodeMirror
+                  value={formData.code}
+                  height="100%"
+                  extensions={[
+                    javascript({
+                      jsx: true,
+                      typescript: true,
+                    }),
+                    EditorView.theme({
+                      "*": {
+                        fontSize: "16px",
+                        lineHeight: "24px",
+                      },
+                    }),
+                  ]}
+                  theme="dark"
+                  onChange={(code) => {
+                    onFormChange({ ...formData, code });
+                  }}
+                />
+              </div>
             </div>
 
             <div className="flex gap-4 pt-4">
