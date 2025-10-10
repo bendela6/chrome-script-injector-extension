@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ScriptDto, ScriptFormData } from "../types";
+import { ScriptDto, ScriptFormData, ScriptRunAt } from "../types";
 import { scriptsActions, scriptsStore, startScriptsStorageListener } from "../utils";
 import { EmptyState, PageHeader, ScriptCard, ScriptForm, SearchBar } from "./components";
 
@@ -8,6 +8,7 @@ const initialFormData: ScriptFormData = {
   urlPattern: "",
   code: "",
   enabled: true,
+  runAt: ScriptRunAt.DocumentIdle,
 };
 
 export function Options() {

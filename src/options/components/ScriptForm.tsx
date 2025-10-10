@@ -3,7 +3,7 @@ import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { EditorView } from "@codemirror/view";
 import { Button } from "../../components";
-import { ScriptFormData } from "../../types.ts";
+import { ScriptFormData, ScriptRunAt } from "../../types.ts";
 
 interface ScriptFormProps {
   isEditing: boolean;
@@ -69,15 +69,30 @@ export const ScriptForm: React.FC<ScriptFormProps> = ({
                 onChange={(e) => onFormChange({ ...formData, urlPattern: e.target.value })}
                 placeholder=".*github\.com.*"
               />
-              <div className="mt-2 text-xs text-slate-600 bg-slate-50 p-3 rounded">
-                Use regex pattern to auto-inject on matching pages. Examples:
-                <br />• <code className="bg-white px-1 py-0.5 rounded">.*github\.com.*</code> - Any
-                GitHub page
-                <br />•{" "}
-                <code className="bg-white px-1 py-0.5 rounded">https://example\.com/.*</code> - All
-                pages on example.com
-                <br />• Leave empty for manual execution only
-              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-semibold text-slate-700 mb-2">Run At</label>
+              <select
+                className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:border-blue-500 focus:outline-none transition-all"
+                value={formData.runAt || "document_idle"}
+                onChange={(e) =>
+                  onFormChange({
+                    ...formData,
+                    runAt: e.target.value as ScriptRunAt,
+                  })
+                }
+              >
+                <option value={ScriptRunAt.DocumentStart}>
+                  Document Start - Runs as soon as possible
+                </option>
+                <option value={ScriptRunAt.DocumentEnd}>
+                  Document End - DOM ready (similar to DOMContentLoaded)
+                </option>
+                <option value={ScriptRunAt.DocumentIdle}>
+                  Document Idle - Page fully loaded (default)
+                </option>
+              </select>
             </div>
 
             <div>

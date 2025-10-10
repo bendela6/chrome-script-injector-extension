@@ -1,5 +1,5 @@
 import React from "react";
-import { ScriptDto } from "../../types";
+import { ScriptDto, ScriptRunAt } from "../../types";
 import { Button } from "../../components";
 
 interface ScriptCardProps {
@@ -9,8 +9,16 @@ interface ScriptCardProps {
 }
 
 export const ScriptCard: React.FC<ScriptCardProps> = ({ script, onEdit, onDelete }) => {
-  const codePreview =
-    script.code.length > 150 ? script.code.substring(0, 150) + "..." : script.code;
+  const getRunAtLabel = (runAt?: string) => {
+    switch (runAt) {
+      case ScriptRunAt.DocumentStart:
+        return "⚡ Document Start";
+      case ScriptRunAt.DocumentEnd:
+        return "📄 Document End";
+      default:
+        return "⏳ Document Idle";
+    }
+  };
 
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-xl transition-all border-2 border-slate-200">
@@ -27,8 +35,8 @@ export const ScriptCard: React.FC<ScriptCardProps> = ({ script, onEdit, onDelete
           {script.urlPattern || "No URL pattern (manual only)"}
         </div>
 
-        <div className="bg-slate-50 p-3 rounded border border-slate-200 font-mono text-xs text-slate-700 mb-4 overflow-x-auto">
-          {codePreview}
+        <div className="text-sm mb-4 px-3 py-2 rounded bg-purple-100 text-purple-800">
+          {getRunAtLabel(script.runAt)}
         </div>
 
         <div className="flex gap-2">
