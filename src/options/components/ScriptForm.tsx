@@ -20,17 +20,6 @@ export const ScriptForm: React.FC<ScriptFormProps> = ({
   onSave,
   onCancel,
 }) => {
-  const textareaRef = React.useRef<HTMLTextAreaElement>(null);
-
-  // Auto-resize textarea to fit content
-  React.useEffect(() => {
-    const textarea = textareaRef.current;
-    if (textarea) {
-      textarea.style.height = "auto";
-      textarea.style.height = Math.max(textarea.scrollHeight, 400) + "px";
-    }
-  }, [formData.code]);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 pb-12">
       <div className="max-w-4xl mx-auto px-8 py-8">
