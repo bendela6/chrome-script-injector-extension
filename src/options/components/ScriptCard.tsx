@@ -1,11 +1,11 @@
 import React from 'react';
-import { Script } from '../../types';
+import { ScriptDto } from '../../types';
 import { Button } from '../../components';
 
 interface ScriptCardProps {
-  script: Script;
-  onEdit: (script: Script) => void;
-  onDelete: (scriptId: number) => void;
+  script: ScriptDto;
+  onEdit: (script: ScriptDto) => void;
+  onDelete: (script: ScriptDto) => void;
 }
 
 export const ScriptCard: React.FC<ScriptCardProps> = ({ script, onEdit, onDelete }) => {
@@ -41,7 +41,7 @@ export const ScriptCard: React.FC<ScriptCardProps> = ({ script, onEdit, onDelete
             ✏ Edit
           </Button>
           <Button
-            onClick={() => onDelete(script.id)}
+            onClick={() => onDelete(script)}
             variant="danger"
             className="flex-1"
           >

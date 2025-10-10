@@ -1,32 +1,29 @@
-import React from 'react';
-import { Button, Modal } from '../../components';
+import React from "react";
+import { Button, Modal } from "../../components";
+import { ScriptFormData } from "../../types.ts";
 
 interface ScriptFormProps {
   isOpen: boolean;
   isEditing: boolean;
-  formData: {
-    name: string;
-    urlPattern: string;
-    code: string;
-  };
-  onFormChange: (data: { name: string; urlPattern: string; code: string }) => void;
+  formData: ScriptFormData;
+  onFormChange: (data: ScriptFormData) => void;
   onSave: () => void;
   onClose: () => void;
 }
 
 export const ScriptForm: React.FC<ScriptFormProps> = ({
-  isOpen,
-  isEditing,
-  formData,
-  onFormChange,
-  onSave,
-  onClose
-}) => {
+                                                        isOpen,
+                                                        isEditing,
+                                                        formData,
+                                                        onFormChange,
+                                                        onSave,
+                                                        onClose
+                                                      }) => {
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={isEditing ? 'Edit Script' : 'New Script'}
+      title={isEditing ? "Edit Script" : "New Script"}
     >
       <div className="space-y-6">
         <div>
@@ -56,7 +53,8 @@ export const ScriptForm: React.FC<ScriptFormProps> = ({
           <div className="mt-2 text-xs text-slate-600 bg-slate-50 p-3 rounded">
             Use regex pattern to auto-inject on matching pages. Examples:<br/>
             • <code className="bg-white px-1 py-0.5 rounded">.*github\.com.*</code> - Any GitHub page<br/>
-            • <code className="bg-white px-1 py-0.5 rounded">https://example\.com/.*</code> - All pages on example.com<br/>
+            • <code className="bg-white px-1 py-0.5 rounded">https://example\.com/.*</code> - All pages on
+            example.com<br/>
             • Leave empty for manual execution only
           </div>
         </div>

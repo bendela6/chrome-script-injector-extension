@@ -1,57 +1,45 @@
-import React, { useEffect, useState } from "react";
-import { Script } from "../types";
-import { loadScripts, saveScripts } from "../utils/storage";
-import { EmptyState, PageHeader, ScriptForm, ScriptGrid, SearchBar } from "./components";
+import { useEffect, useState } from "react";
+import { ScriptDto, ScriptFormData } from "../types";
+import { scriptsActions, scriptsStore, startScriptsStorageListener } from "../utils";
+import { EmptyState, PageHeader, ScriptCard, ScriptForm, SearchBar } from "./components";
 
-const Options: React.FC = () => {
-  const [scripts, setScripts] = useState<Script[]>([]);
-  const [editingScriptId, setEditingScriptId] = useState<number | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
+const initialFormData: ScriptFormData = {
+  name: "",
+  urlPattern: "",
+  code: "",
+  enabled: true
+};
+
+export function Options() {
+  const [scripts, setScripts] = useState<ScriptDto[]>([]);
+  const [editingScriptId, setEditingScriptId] = useState<string>();
+  const [searchQuery, setSearchQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState<ScriptFormData>(initialFormData);
 
-  const [formData, setFormData] = useState({
-    name: "",
-    urlPattern: "",
-    code: ""
-  });
+  useEffect(() => startScriptsStorageListener(), []);
+  useEffect(() => scriptsStore.subscribe(setScripts), []);
 
-  useEffect(() => {
-    void loadAndRenderScripts();
-  }, []);
-
-  const loadAndRenderScripts = async () => {
-    const loadedScripts = await loadScripts();
-    setScripts(loadedScripts);
-  };
-
-  const handleSaveScripts = async (newScripts: Script[]) => {
-    await saveScripts(newScripts);
-    setScripts(newScripts);
-  };
-
-  const filteredScripts = scripts.filter(script =>
-    !searchQuery ||
-    script.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    (script.urlPattern && script.urlPattern.toLowerCase().includes(searchQuery.toLowerCase()))
+  const filteredScripts = scripts.filter(script => {
+      return !searchQuery ||
+        script.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        script.urlPattern.toLowerCase().includes(searchQuery.toLowerCase());
+    }
   );
 
-  const handleNewScript = () => {
-    setEditingScriptId(null);
-    setFormData({ name: "", urlPattern: "", code: "" });
+  const handleScriptCreate = () => {
+    setEditingScriptId(undefined);
+    setFormData(initialFormData);
     setShowModal(true);
   };
 
-  const handleEditScript = (script: Script) => {
+  const handleScriptEdit = (script: ScriptDto) => {
     setEditingScriptId(script.id);
-    setFormData({
-      name: script.name,
-      urlPattern: script.urlPattern || "",
-      code: script.code
-    });
+    setFormData(script);
     setShowModal(true);
   };
 
-  const handleSaveScript = async () => {
+  const handleScriptSave = async () => {
     const { name, urlPattern, code } = formData;
 
     if (!name.trim() || !code.trim()) {
@@ -68,34 +56,17 @@ const Options: React.FC = () => {
       }
     }
 
-    let newScripts: Script[];
-
-    if (editingScriptId !== null) {
-      newScripts = scripts.map(s =>
-        s.id === editingScriptId
-          ? { ...s, name, urlPattern, code, updatedAt: new Date().toISOString() }
-          : s
-      );
+    if (editingScriptId) {
+      void scriptsActions.updateScript(editingScriptId, formData);
     } else {
-      const newScript: Script = {
-        id: Date.now(),
-        name,
-        urlPattern,
-        code,
-        createdAt: new Date().toISOString()
-      };
-      newScripts = [...scripts, newScript];
+      void scriptsActions.createScript(formData);
     }
-
-    await handleSaveScripts(newScripts);
     setShowModal(false);
   };
 
-  const handleDeleteScript = async (scriptId: number) => {
-    const script = scripts.find(s => s.id === scriptId);
+  const handleScriptDelete = async (script: ScriptDto) => {
     if (confirm(`Are you sure you want to delete "${script?.name}"?`)) {
-      const newScripts = scripts.filter(s => s.id !== scriptId);
-      await handleSaveScripts(newScripts);
+      void scriptsActions.deleteScript(script.id);
     }
   };
 
@@ -106,21 +77,28 @@ const Options: React.FC = () => {
       <SearchBar
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        onNewScript={handleNewScript}
+        onNewScript={handleScriptCreate}
       />
 
       <div className="max-w-7xl mx-auto px-8 py-6">
         {filteredScripts.length === 0 ? (
           <EmptyState
             searchQuery={searchQuery}
-            onNewScript={handleNewScript}
+            onNewScript={handleScriptCreate}
           />
         ) : (
-          <ScriptGrid
-            scripts={filteredScripts}
-            onEdit={handleEditScript}
-            onDelete={handleDeleteScript}
-          />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {scripts.map(script => {
+              return (
+                <ScriptCard
+                  key={script.id}
+                  script={script}
+                  onEdit={handleScriptEdit}
+                  onDelete={handleScriptDelete}
+                />
+              );
+            })}
+          </div>
         )}
       </div>
 
@@ -129,11 +107,9 @@ const Options: React.FC = () => {
         isEditing={editingScriptId !== null}
         formData={formData}
         onFormChange={setFormData}
-        onSave={handleSaveScript}
+        onSave={handleScriptSave}
         onClose={() => setShowModal(false)}
       />
     </div>
   );
-};
-
-export default Options;
+}

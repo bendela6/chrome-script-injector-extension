@@ -1,13 +1,16 @@
-export interface Script {
-  id: number;
+export type ScriptDto = {
+  id: string;
   name: string;
   urlPattern: string;
   code: string;
+  enabled: boolean;
   createdAt: string;
-  updatedAt?: string;
-  enabled?: boolean; // Scripts are enabled by default
+  updatedAt: string;
 }
 
-export interface ScriptsStorage {
-  scripts: Script[];
+export type ScriptFormData = Omit<ScriptDto, "id" | "createdAt" | "updatedAt">;
+
+export type TabDto = {
+  id: number;
+  url: string;
 }
