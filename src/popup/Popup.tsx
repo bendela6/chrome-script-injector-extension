@@ -16,7 +16,9 @@ export function Popup() {
   const [scripts, setScripts] = useState<ScriptDto[]>([]);
 
   useEffect(() => startTabListener(), []);
-  useEffect(() => startScriptsStorageListener(), []);
+  useEffect(() => {
+    void startScriptsStorageListener();
+  }, []);
   useEffect(() => tabStore.subscribe(setTab), []);
   useEffect(() => scriptsStore.subscribe(setScripts), []);
 

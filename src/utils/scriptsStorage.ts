@@ -5,11 +5,9 @@ export const scriptsStore = new Store<ScriptDto[]>([]);
 
 const STORAGE_KEY = "scripts";
 
-export function startScriptsStorageListener() {
-  chrome.storage.sync.get([STORAGE_KEY]).then((result) => {
-    const scripts = result[STORAGE_KEY] || [];
-    scriptsStore.setData(scripts);
-  });
+export async function startScriptsStorageListener() {
+  const result = await chrome.storage.sync.get([STORAGE_KEY]);
+  scriptsStore.setData(result[STORAGE_KEY] || []);
 
   const changesListener = (
     changes: { [key: string]: chrome.storage.StorageChange },

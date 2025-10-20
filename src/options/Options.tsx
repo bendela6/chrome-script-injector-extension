@@ -18,7 +18,9 @@ export function Options() {
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState<ScriptFormData>(initialFormData);
 
-  useEffect(() => startScriptsStorageListener(), []);
+  useEffect(() => {
+    void startScriptsStorageListener();
+  }, []);
   useEffect(() => scriptsStore.subscribe(setScripts), []);
 
   const filteredScripts = scripts.filter((script) => {
