@@ -7,9 +7,6 @@ const outDir = resolve(__dirname, "dist");
 
 const scriptEntries = {
   background: resolve(__dirname, "src/background.ts"),
-  document_start: resolve(__dirname, "src/document_start.ts"),
-  document_end: resolve(__dirname, "src/document_end.ts"),
-  document_idle: resolve(__dirname, "src/document_idle.ts"),
 };
 
 // Main build config for popup/options pages
