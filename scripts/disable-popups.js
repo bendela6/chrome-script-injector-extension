@@ -27,14 +27,13 @@ document.createElement = function (tagName) {
 document.addEventListener(
   "click",
   function (event) {
+    console.log("Click event detected", event);
     let target = event.target;
-    while (target && target !== document) {
+    while (target) {
       if (target?.tagName?.toLowerCase() === "a") {
-        const href = target?.getAttribute("href");
-        const targetAttr = target?.getAttribute("target");
-        if (href && targetAttr) {
+        if (isExternalLink(target?.href)) {
           event.preventDefault();
-          console.log(`Blocked popup link to ${href}`);
+          console.log(`Blocked popup link to ${target?.href}`);
           return;
         }
       }
@@ -48,6 +47,15 @@ document.addEventListener(
 window.open = function () {
   console.log("Disable window.open");
 };
+
+function isExternalLink(url) {
+  try {
+    const linkUrl = new URL(url, window.location.href);
+    return linkUrl.origin !== window.location.origin;
+  } catch (e) {
+    return false;
+  }
+}
 
 // const div = document.createElement("div");
 // div.innerHTML =
