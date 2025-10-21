@@ -1,4 +1,5 @@
 import { ScriptDto } from "./types";
+import { isScriptUrlMatched } from "./utils";
 
 const STORAGE_KEY = "scripts";
 
@@ -8,17 +9,10 @@ async function getAllScripts(): Promise<ScriptDto[]> {
   return result[STORAGE_KEY] || [];
 }
 
-// Check if URL matches the pattern
-function isUrlMatched(urlPattern: string, url: string): boolean {
-  const regexPattern = urlPattern.replace(/[.+?^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*");
-  const regex = new RegExp(`^${regexPattern}$`);
-  return regex.test(url);
-}
-
 // Inject matching scripts into a tab
 async function injectScriptsIntoTab(tabId: number, url: string) {
   const scripts = await getAllScripts();
-  const enabledScripts = scripts.filter((s) => s.enabled && isUrlMatched(s.urlPattern, url));
+  const enabledScripts = scripts.filter((s) => s.enabled && isScriptUrlMatched(s, url));
 
   for (const script of enabledScripts) {
     try {
