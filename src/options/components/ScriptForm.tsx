@@ -1,139 +1,107 @@
-import React from "react";
-import CodeMirror from "@uiw/react-codemirror";
-import { javascript } from "@codemirror/lang-javascript";
-import { EditorView } from "@codemirror/view";
 import { Button } from "../../components";
-import { ScriptFormData, ScriptRunAt } from "../../types.ts";
+import { ScriptFormData } from "../../types.ts";
+import { scriptRunAtOptions } from "../../utils";
+import classNames from "classnames";
+import { CodeInput } from "./CodeInput";
+import { InputSelect } from "./InputSelect.tsx";
 
-interface ScriptFormProps {
-  isEditing: boolean;
+interface Props {
+  className?: string;
   formData: ScriptFormData;
-  onFormChange: (data: ScriptFormData) => void;
+  onFormChange: (form: ScriptFormData) => void;
   onSave: () => void;
   onCancel: () => void;
 }
 
-export const ScriptForm: React.FC<ScriptFormProps> = ({
-  isEditing,
-  formData,
-  onFormChange,
-  onSave,
-  onCancel,
-}) => {
+export function ScriptForm({ className, formData, onFormChange, onSave, onCancel }: Props) {
+  const isEditing = formData.id !== undefined;
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 pb-12">
-      <div className="max-w-4xl mx-auto px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <button
-            onClick={onCancel}
-            className="flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-4 transition-colors"
-          >
-            <span className="text-xl">←</span>
-            <span className="font-medium">Back to Scripts</span>
-          </button>
-          <h1 className="text-4xl font-bold text-slate-900">
-            {isEditing ? "Edit Script" : "New Script"}
-          </h1>
-          <p className="text-slate-600 mt-2">
-            {isEditing
-              ? "Update your script details below"
-              : "Create a new script to inject into web pages"}
-          </p>
+    <div className={classNames(className, "flex flex-col")}>
+      <div
+        className={classNames(
+          "flex flex-col gap-y-4",
+          "flex-none",
+          "px-4 py-2",
+          "shadow-lg",
+          "bg-gradient-to-t from-slate-50 to-slate-100" //
+        )}
+      >
+        <div className={classNames("flex items-center justify-between")}>
+          <h2 className="text-sm font-bold">{isEditing ? "✏️ Edit Script" : "➕ New Script"}</h2>
+
+          <div className="flex items-center gap-x-2">
+            <Button onClick={onCancel} variant="secondary" className="">
+              ❌ Cancel
+            </Button>
+
+            <Button onClick={onSave} variant="primary" className="">
+              💾 Save
+            </Button>
+          </div>
         </div>
 
-        {/* Form Card */}
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <div className="space-y-6">
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
-                Script Name *
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:border-blue-500 focus:outline-none transition-all"
-                value={formData.name}
-                onChange={(e) => onFormChange({ ...formData, name: e.target.value })}
-                placeholder="My Awesome Script"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
-                URL Pattern (Regex)
-              </label>
-              <input
-                type="text"
-                className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:border-blue-500 focus:outline-none transition-all font-mono"
-                value={formData.urlPattern}
-                onChange={(e) => onFormChange({ ...formData, urlPattern: e.target.value })}
-                placeholder=".*github\.com.*"
-              />
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">Run At</label>
-              <select
-                className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:border-blue-500 focus:outline-none transition-all"
-                value={formData.runAt || "document_idle"}
-                onChange={(e) =>
-                  onFormChange({
-                    ...formData,
-                    runAt: e.target.value as ScriptRunAt,
-                  })
-                }
-              >
-                <option value={ScriptRunAt.DocumentStart}>
-                  Document Start - Runs as soon as possible
-                </option>
-                <option value={ScriptRunAt.DocumentEnd}>
-                  Document End - DOM ready (similar to DOMContentLoaded)
-                </option>
-                <option value={ScriptRunAt.DocumentIdle}>
-                  Document Idle - Page fully loaded (default)
-                </option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
-                JavaScript Code *
-              </label>
-              <div className="rounded-lg border-2 border-slate-200 focus-within:border-blue-500 transition-all overflow-hidden">
-                <CodeMirror
-                  value={formData.code}
-                  height="100%"
-                  extensions={[
-                    javascript({
-                      jsx: true,
-                      typescript: true,
-                    }),
-                    EditorView.theme({
-                      "*": {
-                        fontSize: "16px",
-                        lineHeight: "24px",
-                      },
-                    }),
-                  ]}
-                  theme="dark"
-                  onChange={(code) => {
-                    onFormChange({ ...formData, code });
-                  }}
-                />
-              </div>
-            </div>
-
-            <div className="flex gap-4 pt-4">
-              <Button onClick={onSave} variant="primary" className="flex-1">
-                💾 Save Script
-              </Button>
-              <Button onClick={onCancel} variant="secondary" className="flex-1">
-                ❌ Cancel
-              </Button>
-            </div>
+        <div className={classNames("flex-none  grid grid-cols-12 gap-x-2")}>
+          <div className="col-span-4">
+            <label className="block text-sm font-semibold text-slate-700 mb-2">Script Name *</label>
+            <input
+              type="text"
+              className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:border-blue-500 focus:outline-none transition-all"
+              value={formData.name}
+              onChange={(e) => onFormChange({ ...formData, name: e.target.value })}
+              placeholder="My Awesome Script"
+            />
+          </div>
+          <div className="col-span-4">
+            <label className="block text-sm font-semibold text-slate-700 mb-2">
+              URL Pattern (Regex)
+            </label>
+            <input
+              type="text"
+              className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:border-blue-500 focus:outline-none transition-all font-mono"
+              value={formData.urlPattern}
+              onChange={(e) => onFormChange({ ...formData, urlPattern: e.target.value })}
+              placeholder=".*github\.com.*"
+            />
+          </div>
+          <div className="col-span-2">
+            <label className="block text-sm font-semibold text-slate-700 mb-2">Run At</label>
+            <InputSelect
+              options={scriptRunAtOptions}
+              value={formData.runAt}
+              onChange={(runAt) =>
+                onFormChange({
+                  ...formData,
+                  runAt,
+                })
+              }
+            />
+          </div>
+          <div className="col-span-2">
+            <label className="block text-sm font-semibold text-slate-700 mb-2">Enabled</label>
+            <InputSelect
+              options={[
+                { value: "yes", label: "Yes" },
+                { value: "no", label: "No" },
+              ]}
+              value={formData.enabled ? "yes" : "no"}
+              onChange={(value) =>
+                onFormChange({
+                  ...formData,
+                  enabled: value === "yes",
+                })
+              }
+            />
           </div>
         </div>
       </div>
+
+      <CodeInput
+        value={formData.code}
+        onChange={(code) => {
+          onFormChange({ ...formData, code });
+        }}
+      />
     </div>
   );
-};
+}

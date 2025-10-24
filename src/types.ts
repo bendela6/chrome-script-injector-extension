@@ -15,7 +15,9 @@ export type ScriptDto = {
   updatedAt: string;
 };
 
-export type ScriptFormData = Omit<ScriptDto, "id" | "createdAt" | "updatedAt">;
+export type ScriptFormData = Omit<ScriptDto, "id" | "createdAt" | "updatedAt"> & {
+  id?: string;
+};
 
 export type TabDto = {
   id: number;

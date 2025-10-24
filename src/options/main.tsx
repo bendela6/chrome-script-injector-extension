@@ -1,10 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { Options } from "./Options";
-import "../app.css";
+import { App } from "./App";
+import { ScriptsProvider } from "./ScriptsProvider";
+import "../app.scss";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Options />
+    <ScriptsProvider>
+      <App />
+    </ScriptsProvider>
   </React.StrictMode>
 );

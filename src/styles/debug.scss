@@ -1,0 +1,64 @@
+$colors: (
+  r: #f008,
+  g: #0f08,
+  b: #00f8,
+);
+$sizes: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10;
+$baseColor: #0005;
+$baseSize: 1px;
+$style: dashed;
+
+.xx {
+  outline: $baseColor $style $baseSize;
+}
+
+.dd {
+  outline: $baseColor $style $baseSize;
+  outline-offset: -$baseSize;
+}
+
+.cdd > * {
+  outline: $baseColor $style $baseSize;
+  outline-offset: -$baseSize;
+}
+
+@each $colorName, $color in $colors {
+  .xx#{$colorName} {
+    outline: #{$color} $style $baseSize;
+  }
+  .dd#{$colorName} {
+    outline: #{$color} $style $baseSize;
+    outline-offset: -$baseSize;
+  }
+  .cdd#{$colorName} > * {
+    outline: #{$color} $style $baseSize;
+    outline-offset: -$baseSize;
+  }
+  @each $size in $sizes {
+    .xx#{$colorName}#{$size} {
+      outline: #{$color} $style #{$size * $baseSize};
+    }
+    .dd#{$colorName}#{$size} {
+      outline: #{$color} $style #{$size * $baseSize};
+      outline-offset: -#{$size * $baseSize};
+    }
+    .cdd#{$colorName}#{$size} > * {
+      outline: #{$color} $style #{$size * $baseSize};
+      outline-offset: -#{$size * $baseSize};
+    }
+  }
+}
+
+@each $size in $sizes {
+  .xx#{$size} {
+    outline: #{$baseColor} $style #{$size * $baseSize};
+  }
+  .dd#{$size} {
+    outline: #{$baseColor} $style #{$size * $baseSize};
+    outline-offset: -#{$size * $baseSize};
+  }
+  .cdd#{$size} > * {
+    outline: #{$baseColor} $style #{$size * $baseSize};
+    outline-offset: -#{$size * $baseSize};
+  }
+}

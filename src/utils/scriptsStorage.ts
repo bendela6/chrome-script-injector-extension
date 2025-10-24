@@ -1,9 +1,23 @@
-import { ScriptDto, ScriptFormData } from "../types";
+import { ScriptDto, ScriptFormData, ScriptRunAt } from "../types";
 import { Store } from "./store.ts";
 
 export const scriptsStore = new Store<ScriptDto[]>([]);
 
 const STORAGE_KEY = "scripts";
+
+export const initialFormData: ScriptFormData = {
+  name: "",
+  urlPattern: "",
+  code: "",
+  enabled: true,
+  runAt: ScriptRunAt.DocumentIdle,
+};
+
+export const scriptRunAtOptions = [
+  { label: "⚡ Document Start", value: ScriptRunAt.DocumentStart },
+  { label: "📄 Document End", value: ScriptRunAt.DocumentEnd },
+  { label: "⏳ Document Idle", value: ScriptRunAt.DocumentIdle },
+];
 
 export async function startScriptsStorageListener() {
   const result = await chrome.storage.sync.get([STORAGE_KEY]);
@@ -64,7 +78,15 @@ export const scriptsActions = {
     }
   },
 
-  async deleteScript(id: string): Promise<void> {
+  async saveScript(script: ScriptFormData): Promise<void> {
+    if (script.id) {
+      await this.updateScript(script.id, script);
+    } else {
+      await this.createScript(script);
+    }
+  },
+
+  async removeScript(id: string): Promise<void> {
     const scripts = scriptsStore.getData();
     const updatedScripts = scripts.filter((script) => script.id !== id);
     await this.saveScripts(updatedScripts);
