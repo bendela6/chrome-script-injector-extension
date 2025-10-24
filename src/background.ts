@@ -1,5 +1,5 @@
 import { ScriptDto } from "./types";
-import { isScriptUrlMatched } from "./utils";
+import { isScriptUrlMatched, transpileCode } from "./utils";
 
 const STORAGE_KEY = "scripts";
 
@@ -16,6 +16,9 @@ async function injectScriptsIntoTab(tabId: number, url: string) {
 
   for (const script of enabledScripts) {
     try {
+      // Transpile TypeScript to JavaScript before injection
+      const transpiledCode = transpileCode(script.code);
+
       // Inject into MAIN world at the specified timing to bypass CSP
       await chrome.scripting.executeScript({
         target: { tabId },
@@ -29,7 +32,7 @@ async function injectScriptsIntoTab(tabId: number, url: string) {
             console.error(`✗ Failed to execute user script: ${scriptName}`, error);
           }
         },
-        args: [script.code, script.name],
+        args: [transpiledCode, script.name],
       });
       console.log(`Injected script: ${script.name} into tab ${tabId}`);
     } catch (error) {
