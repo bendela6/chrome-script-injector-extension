@@ -26,11 +26,11 @@ export function ScriptForm({ className, formData, onFormChange, onSave, onCancel
   };
 
   return (
-    <div className={classNames(className, "flex flex-col")}>
+    <div className={classNames(className, "flex flex-col overflow-hidden")}>
       <div
         className={classNames(
-          "flex flex-col gap-y-4",
           "flex-none",
+          "flex flex-col gap-y-4",
           "px-4 py-2",
           "shadow-lg",
           "bg-gradient-to-t from-slate-50 to-slate-100"
@@ -80,12 +80,16 @@ export function ScriptForm({ className, formData, onFormChange, onSave, onCancel
         </Form>
       </div>
 
-      <CodeInput
-        value={formData.code}
-        onChange={(code) => {
-          onFormChange({ ...formData, code });
-        }}
-      />
+      <div className="flex-grow overflow-hidden">
+        <CodeInput
+          className="w-full h-full"
+          value={formData.code}
+          onChange={(code) => {
+            onFormChange({ ...formData, code });
+          }}
+        />
+      </div>
+      <div className="flex-none h-4 bg-gradient-to-t from-slate-50 to-slate-100" />
     </div>
   );
 }
