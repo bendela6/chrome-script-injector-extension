@@ -2,12 +2,11 @@ const originalCreateElement = document.createElement;
 
 // override createElement to block certain tags
 document.createElement = function (tagName) {
-  const blackListElements = ["iframe", "script", "link", "meta", "a"];
-  const blackListAttributes = ["href", "src", "target"];
+  const blackListElements = ["iframe", "script", "link", "meta", "a", "form"];
+  const blackListAttributes = ["href", "src", "target", "action", "innerHTML"];
   if (!blackListElements.includes(tagName.toLowerCase())) {
     return originalCreateElement.apply(document, arguments);
   }
-
   const element = originalCreateElement.apply(document, arguments);
   element.style.display = "none";
   blackListAttributes.forEach((attr) => {
@@ -23,25 +22,21 @@ document.createElement = function (tagName) {
   return element;
 };
 
-// disable click popups
-document.addEventListener(
-  "click",
-  function (event) {
-    console.log("Click event detected", event);
-    let target = event.target;
-    while (target) {
-      if (target?.tagName?.toLowerCase() === "a") {
-        if (isExternalLink(target?.href)) {
-          event.preventDefault();
-          console.log(`Blocked popup link to ${target?.href}`);
-          return;
-        }
-      }
-      target = target?.parentNode;
-    }
-  },
-  true
-);
+document.addEventListener = function (type, listener, options) {
+  console.log("Adding event listener for", type, listener, options);
+  return EventTarget.prototype.addEventListener.call(this, type, listener, options);
+};
+
+// monitor certain events
+["click", "submit", "contextmenu", "mousedown", "mouseup"].forEach((eventType) => {
+  document.addEventListener(
+    eventType,
+    function (event) {
+      console.log(`${eventType} event detected`, event);
+    },
+    true
+  );
+});
 
 // disable window.open
 window.open = function () {
