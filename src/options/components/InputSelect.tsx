@@ -1,3 +1,4 @@
+import { Select } from "antd";
 import { ReactNode } from "react";
 import classNames from "classnames";
 
@@ -13,29 +14,19 @@ interface Props<K> {
   options: InputSelectOptions<K>[];
 }
 
-export function InputSelect<K extends string>({
+export function InputSelect<K extends string | boolean | number>({
   className, //
   value,
   onChange,
   options,
 }: Props<K>) {
   return (
-    <select
-      className={classNames(
-        className,
-        "w-full px-4 py-2",
-        "border-2 border-slate-200 rounded-lg",
-        "focus:border-blue-500 focus:outline-none",
-        "transition-all"
-      )}
-      value={value as unknown as string}
-      onChange={(e) => onChange?.(e.target.value as unknown as K)}
-    >
-      {options.map((option) => (
-        <option key={option.value} value={option.value}>
-          {option.label}
-        </option>
-      ))}
-    </select>
+    <Select
+      className={classNames(className)}
+      value={value}
+      onChange={onChange}
+      options={options}
+      style={{ width: "100%" }}
+    />
   );
 }

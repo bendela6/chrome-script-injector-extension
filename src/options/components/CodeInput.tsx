@@ -12,7 +12,7 @@ interface Props {
 export function CodeInput({ className, value, onChange }: Props) {
   return (
     <CodeMirror
-      className={classNames(className, "overflow-hidden")}
+      className={classNames(className, "overflow-hidden min-h-full")}
       value={value}
       extensions={[
         javascript({

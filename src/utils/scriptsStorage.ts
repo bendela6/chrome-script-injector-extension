@@ -19,6 +19,11 @@ export const scriptRunAtOptions = [
   { label: "⏳ Document Idle", value: ScriptRunAt.DocumentIdle },
 ];
 
+export const scriptEnabledOptions = [
+  { label: "Enabled", value: true },
+  { label: "Disabled", value: false },
+];
+
 export async function startScriptsStorageListener() {
   const result = await chrome.storage.sync.get([STORAGE_KEY]);
   scriptsStore.setData(result[STORAGE_KEY] || []);

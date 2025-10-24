@@ -1,6 +1,6 @@
-import { Button } from "../../components";
+import { Button, Input, Form } from "antd";
 import { ScriptFormData } from "../../types.ts";
-import { scriptRunAtOptions } from "../../utils";
+import { scriptEnabledOptions, scriptRunAtOptions } from "../../utils";
 import classNames from "classnames";
 import { CodeInput } from "./CodeInput";
 import { InputSelect } from "./InputSelect.tsx";
@@ -16,6 +16,15 @@ interface Props {
 export function ScriptForm({ className, formData, onFormChange, onSave, onCancel }: Props) {
   const isEditing = formData.id !== undefined;
 
+  const fields = Object.entries(formData).map(([name, value]) => ({
+    name: [name],
+    value,
+  }));
+
+  const handleValuesChange = (changedValues: Partial<ScriptFormData>) => {
+    onFormChange?.({ ...formData, ...changedValues });
+  };
+
   return (
     <div className={classNames(className, "flex flex-col")}>
       <div
@@ -24,76 +33,51 @@ export function ScriptForm({ className, formData, onFormChange, onSave, onCancel
           "flex-none",
           "px-4 py-2",
           "shadow-lg",
-          "bg-gradient-to-t from-slate-50 to-slate-100" //
+          "bg-gradient-to-t from-slate-50 to-slate-100"
         )}
       >
         <div className={classNames("flex items-center justify-between")}>
           <h2 className="text-sm font-bold">{isEditing ? "✏️ Edit Script" : "➕ New Script"}</h2>
 
           <div className="flex items-center gap-x-2">
-            <Button onClick={onCancel} variant="secondary" className="">
+            <Button type="default" onClick={onCancel}>
               ❌ Cancel
             </Button>
 
-            <Button onClick={onSave} variant="primary" className="">
+            <Button type="primary" onClick={onSave}>
               💾 Save
             </Button>
           </div>
         </div>
 
-        <div className={classNames("flex-none  grid grid-cols-12 gap-x-2")}>
-          <div className="col-span-4">
-            <label className="block text-sm font-semibold text-slate-700 mb-2">Script Name *</label>
-            <input
-              type="text"
-              className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:border-blue-500 focus:outline-none transition-all"
-              value={formData.name}
-              onChange={(e) => onFormChange({ ...formData, name: e.target.value })}
-              placeholder="My Awesome Script"
-            />
+        <Form
+          fields={fields}
+          onValuesChange={(_, payload) => handleValuesChange(payload)}
+          layout="vertical"
+        >
+          <div className="grid grid-cols-12 gap-x-2">
+            <div className="col-span-4">
+              <Form.Item name="name" label="Script Name *" className="mb-0">
+                <Input placeholder="My Awesome Script" />
+              </Form.Item>
+            </div>
+            <div className="col-span-4">
+              <Form.Item name="urlPattern" label="URL Pattern (Regex)" className="mb-0">
+                <Input placeholder=".*github\.com.*" style={{ fontFamily: "monospace" }} />
+              </Form.Item>
+            </div>
+            <div className="col-span-2">
+              <Form.Item name="runAt" label="Run At" className="mb-0">
+                <InputSelect options={scriptRunAtOptions} />
+              </Form.Item>
+            </div>
+            <div className="col-span-2">
+              <Form.Item name="enabled" label="Enabled" className="mb-0">
+                <InputSelect options={scriptEnabledOptions} />
+              </Form.Item>
+            </div>
           </div>
-          <div className="col-span-4">
-            <label className="block text-sm font-semibold text-slate-700 mb-2">
-              URL Pattern (Regex)
-            </label>
-            <input
-              type="text"
-              className="w-full px-4 py-3 border-2 border-slate-200 rounded-lg focus:border-blue-500 focus:outline-none transition-all font-mono"
-              value={formData.urlPattern}
-              onChange={(e) => onFormChange({ ...formData, urlPattern: e.target.value })}
-              placeholder=".*github\.com.*"
-            />
-          </div>
-          <div className="col-span-2">
-            <label className="block text-sm font-semibold text-slate-700 mb-2">Run At</label>
-            <InputSelect
-              options={scriptRunAtOptions}
-              value={formData.runAt}
-              onChange={(runAt) =>
-                onFormChange({
-                  ...formData,
-                  runAt,
-                })
-              }
-            />
-          </div>
-          <div className="col-span-2">
-            <label className="block text-sm font-semibold text-slate-700 mb-2">Enabled</label>
-            <InputSelect
-              options={[
-                { value: "yes", label: "Yes" },
-                { value: "no", label: "No" },
-              ]}
-              value={formData.enabled ? "yes" : "no"}
-              onChange={(value) =>
-                onFormChange({
-                  ...formData,
-                  enabled: value === "yes",
-                })
-              }
-            />
-          </div>
-        </div>
+        </Form>
       </div>
 
       <CodeInput
