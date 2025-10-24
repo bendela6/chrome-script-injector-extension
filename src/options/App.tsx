@@ -1,10 +1,15 @@
 import { Header, MainScreen, ScriptForm } from "./components";
 import { Sidebar } from "./Sidebar";
-import { useScriptsContext } from "./ScriptsProvider";
+import { useScriptsContext } from "../providers";
 import classNames from "classnames";
 
 export function App() {
-  const { scriptFormData, setScriptFormChange, saveScript, closeScriptForm } = useScriptsContext();
+  const {
+    scriptFormData, //
+    setScriptFormChange,
+    saveFormScript,
+    closeScriptForm,
+  } = useScriptsContext();
 
   return (
     <div
@@ -24,7 +29,7 @@ export function App() {
             className="flex-1 overflow-hidden"
             formData={scriptFormData}
             onFormChange={setScriptFormChange}
-            onSave={saveScript}
+            onSave={saveFormScript}
             onCancel={closeScriptForm}
           />
         ) : (

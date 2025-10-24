@@ -1,5 +1,5 @@
 import { ScriptDto, ScriptRunAt } from "../../types";
-import { useScriptsContext } from "../ScriptsProvider";
+import { useScriptsContext } from "../../providers";
 import classNames from "classnames";
 import { variant } from "../../utils";
 

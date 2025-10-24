@@ -15,9 +15,9 @@ type ContextValue = {
 
   openScriptForm: (script?: ScriptDto) => void;
   closeScriptForm: () => void;
+  saveFormScript: () => void;
 
   deleteScript: (script: ScriptDto) => void;
-  saveScript: () => void;
 };
 
 const Context = createContext<ContextValue | undefined>(undefined);
@@ -43,7 +43,7 @@ export function ScriptsProvider({ children }: Props) {
     setScriptFormChange(undefined);
   };
 
-  const saveScript = async () => {
+  const saveFormScript = async () => {
     if (!scriptFormData) return;
     const { name, urlPattern, code } = scriptFormData;
 
@@ -79,7 +79,7 @@ export function ScriptsProvider({ children }: Props) {
     openScriptForm,
     closeScriptForm,
 
-    saveScript,
+    saveFormScript,
     deleteScript,
   };
 

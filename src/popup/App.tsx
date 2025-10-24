@@ -1,33 +1,26 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "../components";
-import {
-  isScriptUrlMatched,
-  scriptsActions,
-  scriptsStore,
-  startScriptsStorageListener,
-  startTabListener,
-  tabStore,
-} from "../utils";
+import { isScriptUrlMatched, scriptsActions, startTabListener, tabStore } from "../utils";
 import classNames from "classnames";
-import { ScriptDto, TabDto } from "../types";
+import { TabDto } from "../types";
+import { useScriptsContext } from "../providers";
 
-export function Popup() {
+export function App() {
   const [tab, setTab] = useState<TabDto>();
-  const [scripts, setScripts] = useState<ScriptDto[]>([]);
 
-  useEffect(() => startTabListener(), []);
+  const { scripts } = useScriptsContext();
+
   useEffect(() => {
-    void startScriptsStorageListener();
+    startTabListener();
+    return tabStore.subscribe(setTab);
   }, []);
-  useEffect(() => tabStore.subscribe(setTab), []);
-  useEffect(() => scriptsStore.subscribe(setScripts), []);
 
   const activeScripts = useMemo(
     () => scripts.filter((script) => tab && isScriptUrlMatched(script, tab?.url)),
     [scripts, tab]
   );
 
-  const toggleScript = async (scriptId: string) => {
+  const toggleScriptEnabled = async (scriptId: string) => {
     await scriptsActions.updateScript(scriptId, (script) => {
       script.enabled = !script.enabled;
       return script;
@@ -35,7 +28,7 @@ export function Popup() {
   };
 
   const openManagePage = () => {
-    chrome.runtime.openOptionsPage();
+    void chrome.runtime.openOptionsPage();
   };
 
   return (
@@ -84,7 +77,7 @@ export function Popup() {
                   </div>
 
                   <button
-                    onClick={() => toggleScript(script.id)}
+                    onClick={() => toggleScriptEnabled(script.id)}
                     className={`flex-shrink-0 relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 ${
                       script.enabled ? "bg-indigo-600" : "bg-slate-300"
                     }`}
@@ -92,9 +85,10 @@ export function Popup() {
                     aria-checked={script.enabled}
                   >
                     <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                      className={classNames(
+                        "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
                         script.enabled ? "translate-x-6" : "translate-x-1"
-                      }`}
+                      )}
                     />
                   </button>
                 </div>

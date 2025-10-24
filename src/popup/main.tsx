@@ -1,10 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import { Popup } from "./Popup";
+import { App } from "./App.tsx";
+import { ScriptsProvider } from "../providers";
 import "../app.scss";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <Popup />
+    <ScriptsProvider>
+      <App />
+    </ScriptsProvider>
   </React.StrictMode>
 );

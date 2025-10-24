@@ -1,4 +1,4 @@
-import { useScriptsContext } from "./ScriptsProvider";
+import { useScriptsContext } from "../providers";
 import { useState } from "react";
 import { ScriptCard } from "./components";
 import classNames from "classnames";
