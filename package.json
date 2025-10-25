@@ -10,7 +10,14 @@
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css}\"",
     "tag": "node tools/create-tag.mjs",
     "tag:push": "node tools/create-tag.mjs --push",
-    "upload": "tsx tools/upload-to-chrome-store.ts"
+    "upload": "tsx tools/upload-to-chrome-store.ts",
+    "release": "node tools/release.mjs",
+    "release:patch": "node tools/release.mjs patch",
+    "release:minor": "node tools/release.mjs minor",
+    "release:major": "node tools/release.mjs major",
+    "release:push": "node tools/release.mjs patch --push",
+    "release:minor:push": "node tools/release.mjs minor --push",
+    "release:major:push": "node tools/release.mjs major --push"
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.2.4",
