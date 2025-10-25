@@ -44,6 +44,8 @@ async function getAccessToken(
     grant_type: "refresh_token",
   });
 
+  log("Requesting access token from Google OAuth...");
+
   const response = await fetch(tokenUrl, {
     method: "POST",
     headers: {
@@ -57,6 +59,21 @@ async function getAccessToken(
   if (!parsed.access_token) {
     error("Failed to get access token. Response:");
     console.error(JSON.stringify(parsed, null, 2));
+
+    if (parsed.error === "invalid_grant") {
+      error("\n❌ Invalid Grant Error - This usually means:");
+      error("  1. Your refresh token has expired or been revoked");
+      error("  2. The CLIENT_ID/CLIENT_SECRET don't match the refresh token");
+      error("  3. You need to generate a new refresh token");
+      error("\nTo generate a new refresh token:");
+      error("  1. Update CLIENT_ID and CLIENT_SECRET in get-refresh-token.js");
+      error("  2. Get a new authorization code from:");
+      error(
+        `     https://accounts.google.com/o/oauth2/auth?response_type=code&scope=https://www.googleapis.com/auth/chromewebstore&client_id=${clientId}&redirect_uri=urn:ietf:wg:oauth:2.0:oob`
+      );
+      error("  3. Run the get-refresh-token.js script with the new code");
+    }
+
     if (parsed.error) {
       throw new Error(
         `${parsed.error}: ${parsed.error_description || "No access token in response"}`
@@ -132,11 +149,12 @@ async function publishExtension(accessToken: string, extensionId: string): Promi
 }
 
 async function main(): Promise<void> {
-  const clientId = process.env.CLIENT_ID;
-  const clientSecret = process.env.CLIENT_SECRET;
-  const refreshToken = process.env.REFRESH_TOKEN;
-  const extensionId = process.env.EXTENSION_ID;
-  const extensionFile = process.env.EXTENSION_FILE || "extension.zip";
+  // Trim environment variables to remove any accidental whitespace
+  const clientId = process.env.CLIENT_ID?.trim();
+  const clientSecret = process.env.CLIENT_SECRET?.trim();
+  const refreshToken = process.env.REFRESH_TOKEN?.trim();
+  const extensionId = process.env.EXTENSION_ID?.trim();
+  const extensionFile = process.env.EXTENSION_FILE?.trim() || "extension.zip";
   const shouldPublish = process.env.PUBLISH === "true";
 
   // Validate required environment variables
@@ -152,6 +170,11 @@ async function main(): Promise<void> {
     console.error('  - PUBLISH (set to "true" to auto-publish)');
     process.exit(1);
   }
+
+  // Debug: Log which credentials are being used (safely)
+  log(`Using Client ID: ${clientId.substring(0, 10)}...`);
+  log(`Using Extension ID: ${extensionId}`);
+  log(`Refresh token length: ${refreshToken.length} characters`);
 
   try {
     // Step 1: Get access token
