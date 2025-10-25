@@ -1,5 +1,4 @@
-import { execSync } from "child_process";
-import { existsSync } from "fs";
+import { existsSync, readFileSync } from "fs";
 
 /**
  * Upload Chrome Extension to Chrome Web Store
@@ -29,38 +28,52 @@ function error(message: string): void {
   console.error(`[Chrome Store Upload ERROR] ${message}`);
 }
 
-function getAccessToken(clientId: string, clientSecret: string, refreshToken: string): string {
+async function getAccessToken(
+  clientId: string,
+  clientSecret: string,
+  refreshToken: string
+): Promise<string> {
   log("Getting access token...");
 
   const tokenUrl = "https://oauth2.googleapis.com/token";
-  const data = [
-    `client_id=${clientId}`,
-    `client_secret=${clientSecret}`,
-    `refresh_token=${refreshToken}`,
-    "grant_type=refresh_token",
-  ].join("&");
 
-  try {
-    const response = execSync(`curl -s -X POST -d "${data}" ${tokenUrl}`, { encoding: "utf8" });
+  const params = new URLSearchParams({
+    client_id: clientId,
+    client_secret: clientSecret,
+    refresh_token: refreshToken,
+    grant_type: "refresh_token",
+  });
 
-    const parsed: TokenResponse = JSON.parse(response);
+  const response = await fetch(tokenUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: params.toString(),
+  });
 
-    if (!parsed.access_token) {
-      error("Failed to get access token. Response:");
-      console.error(response);
-      throw new Error("No access token in response");
+  const parsed: TokenResponse = await response.json();
+
+  if (!parsed.access_token) {
+    error("Failed to get access token. Response:");
+    console.error(JSON.stringify(parsed, null, 2));
+    if (parsed.error) {
+      throw new Error(
+        `${parsed.error}: ${parsed.error_description || "No access token in response"}`
+      );
     }
-
-    log("Access token obtained successfully");
-    return parsed.access_token;
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    error(`Failed to get access token: ${message}`);
-    throw err;
+    throw new Error("No access token in response");
   }
+
+  log("Access token obtained successfully");
+  return parsed.access_token;
 }
 
-function uploadExtension(accessToken: string, extensionId: string, filePath: string): void {
+async function uploadExtension(
+  accessToken: string,
+  extensionId: string,
+  filePath: string
+): Promise<void> {
   log(`Uploading extension from ${filePath}...`);
 
   if (!existsSync(filePath)) {
@@ -69,37 +82,53 @@ function uploadExtension(accessToken: string, extensionId: string, filePath: str
 
   const uploadUrl = `https://www.googleapis.com/upload/chromewebstore/v1.1/items/${extensionId}`;
 
-  try {
-    execSync(
-      `curl -v -H "Authorization: Bearer ${accessToken}" -H "x-goog-api-version: 2" -X PUT -T "${filePath}" "${uploadUrl}"`,
-      { encoding: "utf8", stdio: "inherit" }
-    );
+  const fileBuffer = readFileSync(filePath);
 
-    log("Extension uploaded successfully");
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    error(`Failed to upload extension: ${message}`);
-    throw err;
+  const response = await fetch(uploadUrl, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "x-goog-api-version": "2",
+    },
+    body: fileBuffer,
+  });
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    error("Upload failed. Response:");
+    console.error(JSON.stringify(result, null, 2));
+    throw new Error(`Upload failed with status ${response.status}`);
   }
+
+  log("Extension uploaded successfully");
+  console.log("Upload result:", JSON.stringify(result, null, 2));
 }
 
-function publishExtension(accessToken: string, extensionId: string): void {
+async function publishExtension(accessToken: string, extensionId: string): Promise<void> {
   log("Publishing extension...");
 
   const publishUrl = `https://www.googleapis.com/chromewebstore/v1.1/items/${extensionId}/publish`;
 
-  try {
-    execSync(
-      `curl -v -H "Authorization: Bearer ${accessToken}" -H "x-goog-api-version: 2" -H "Content-Length: 0" -X POST "${publishUrl}"`,
-      { encoding: "utf8", stdio: "inherit" }
-    );
+  const response = await fetch(publishUrl, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "x-goog-api-version": "2",
+      "Content-Length": "0",
+    },
+  });
 
-    log("Extension published successfully");
-  } catch (err) {
-    const message = err instanceof Error ? err.message : String(err);
-    error(`Failed to publish extension: ${message}`);
-    throw err;
+  const result = await response.json();
+
+  if (!response.ok) {
+    error("Publish failed. Response:");
+    console.error(JSON.stringify(result, null, 2));
+    throw new Error(`Publish failed with status ${response.status}`);
   }
+
+  log("Extension published successfully");
+  console.log("Publish result:", JSON.stringify(result, null, 2));
 }
 
 async function main(): Promise<void> {
@@ -126,14 +155,14 @@ async function main(): Promise<void> {
 
   try {
     // Step 1: Get access token
-    const accessToken = getAccessToken(clientId, clientSecret, refreshToken);
+    const accessToken = await getAccessToken(clientId, clientSecret, refreshToken);
 
     // Step 2: Upload extension
-    uploadExtension(accessToken, extensionId, extensionFile);
+    await uploadExtension(accessToken, extensionId, extensionFile);
 
     // Step 3: Optionally publish
     if (shouldPublish) {
-      publishExtension(accessToken, extensionId);
+      await publishExtension(accessToken, extensionId);
     } else {
       log("Skipping publish (set PUBLISH=true to auto-publish)");
     }
