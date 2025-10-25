@@ -7,7 +7,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css}\""
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css}\"",
+    "tag": "node scripts/create-tag.mjs",
+    "tag:push": "node scripts/create-tag.mjs --push"
   },
   "dependencies": {
     "@codemirror/lang-javascript": "^6.2.4",
