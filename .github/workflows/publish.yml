@@ -25,18 +25,14 @@ jobs:
         run: npm run build
 
       - name: Zip extension
-        run: zip -r extension.zip ./dist
+        run: cd dist && zip -r ../extension.zip . && cd ..
 
       - name: Upload to Chrome Web Store
-        uses: furkanipek/chrome-extension-action@v1.0.1
-        with:
-          client-id: ${{ secrets.CLIENT_ID }}
-          client-secret: ${{ secrets.CLIENT_SECRET }}
-          refresh-token: ${{ secrets.REFRESH_TOKEN }}
-          extension-id: ${{ secrets.EXTENSION_ID }}
-
-          extension-file: extension.zip
-
-          # Set to 'true' to auto-publish after uploading.
-          # 'false' will upload it as a draft.
-          publish: false
+        run: npm run upload
+        env:
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
+          EXTENSION_ID: ${{ secrets.EXTENSION_ID }}
+          EXTENSION_FILE: extension.zip
+          PUBLISH: false
