@@ -2,10 +2,17 @@
   "$schema": "https://json.schemastore.org/chrome-manifest.json",
   "manifest_version": 3,
   "name": "Script Injector",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Injects custom JavaScript into the current active tab.",
-  "permissions": ["activeTab", "scripting", "storage", "tabs"],
-  "host_permissions": ["<all_urls>"],
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
   "background": {
     "service_worker": "src/background.js",
     "type": "module"
