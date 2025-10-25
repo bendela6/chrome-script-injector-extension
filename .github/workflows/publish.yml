@@ -35,4 +35,4 @@ jobs:
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
           EXTENSION_ID: ${{ secrets.EXTENSION_ID }}
           EXTENSION_FILE: extension.zip
-          PUBLISH: false
+          PUBLISH: true
